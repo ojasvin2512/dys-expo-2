@@ -1,0 +1,170 @@
+{
+  "users": [
+    [
+      "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+      {
+        "userId": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "theme": "light",
+        "background_style": "none",
+        "language": "en",
+        "voice_uri": null,
+        "custom_instructions_about_user": "",
+        "custom_instructions_how_to_respond": "",
+        "notifications_enabled": false,
+        "total_points": 10,
+        "skill_vocabulary": 6,
+        "skill_grammar": 0,
+        "skill_spelling": 0,
+        "skill_phonetics": 0,
+        "skill_creativity": 0,
+        "skill_logic": 0,
+        "skill_math": 0,
+        "enable_image_generation": true,
+        "enable_daily_time_limit": false,
+        "selected_image_provider": "gemini",
+        "selected_image_model": "models/gemini-2.0-flash-exp",
+        "dyslexia_enabled": false,
+        "dyslexia_ruler_enabled": false,
+        "dyslexia_hover_speech_enabled": false,
+        "dyslexia_font_size": 1,
+        "dyslexia_line_spacing": 1.5,
+        "dyslexia_letter_spacing": 0,
+        "dyslexia_word_spacing": 0,
+        "dyslexia_speech_rate": 1
+      }
+    ]
+  ],
+  "emails": [],
+  "chats": [
+    [
+      "chat-1774388873769",
+      {
+        "session_id": "chat-1774388873769",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1774388873831",
+      {
+        "session_id": "chat-1774388873831",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "How Volcanoes Work Explained",
+        "challenge_id": null,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1774388880400",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "what is volcano",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1774388880401",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "A volcano is a special kind of mountain that has a opening leading deep inside the Earth. \n\nThink of a volcano like a giant chimney for our planet. Here is how they work in simple steps:\n\n*   **Deep Down**: Inside the Earth, it is so hot that even rocks melt! This melted rock is called **magma**.\n*   **Building Pressure**: Sometimes, gas and heat build up underground. It’s a lot like shaking a bottle of soda. The pressure wants to escape!\n*   **The Big Pop**: When the pressure gets too high, the magma pushes up through the mountain. This is called an **eruption**.\n*   **Lava**: Once the magma comes out of the volcano and onto the ground, we call it **lava**. It is very hot and glows bright red or orange.\n\n**An Easy Analogy:**\nImagine a tube of toothpaste. If you squeeze the bottom of the tube very hard, the toothpaste has nowhere to go but out the top! That is exactly what the Earth does to the hot magma inside a volcano.\n\n[SOURCES::YouTube::https://www.youtube.com/results?search_query=how+volcanoes+work+for+kids::📺]\n\n[SOURCES::Google Images::https://www.google.com/search?tbm=isch&q=volcano::🔍||YouTube::https://www.youtube.com/results?search_query=volcano::📺||Britannica::https://kids.britannica.com/kids/search/dictionary?query=volcano::📚||Wikimedia::https://commons.wikimedia.org/w/index.php?search=volcano::🖼️]",
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/48/Augustine_volcano_Jan_24_2006_-_Cyrus_Read.jpg",
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1774388891403",
+      {
+        "session_id": "chat-1774388891403",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "Meet Your Learning Assistant",
+        "challenge_id": null,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1774388893906",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "hey",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1774388893907",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I am your friendly Learning Assistant, created by Ojasvin Anand. I am so happy to meet you!\n\nI am here to help make learning easier and more fun for you. Whether you need help understanding a tricky concept, simplifying a long piece of text, or just want to explore a new topic, I am here to support you.\n\nWhat are we going to learn about today?",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ]
+  ],
+  "progress": [
+    [
+      "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+      [
+        {
+          "date_str": "2026-03-24",
+          "points_earned": 10,
+          "games_played": 0,
+          "minutes_played": 0
+        }
+      ]
+    ]
+  ]
+}
