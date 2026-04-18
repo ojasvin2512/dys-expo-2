@@ -11,8 +11,8 @@
         "custom_instructions_about_user": "",
         "custom_instructions_how_to_respond": "",
         "notifications_enabled": false,
-        "total_points": 35,
-        "skill_vocabulary": 21,
+        "total_points": 40,
+        "skill_vocabulary": 24,
         "skill_grammar": 0,
         "skill_spelling": 0,
         "skill_phonetics": 0,
@@ -3697,7 +3697,7 @@
       {
         "session_id": "chat-1776546442522",
         "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
-        "title": "New Chat",
+        "title": "What is a Bone?",
         "challenge_id": null,
         "created_at": 1776546442522,
         "messages": [
@@ -3707,6 +3707,30 @@
             "role": "assistant",
             "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
             "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776546916122",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "hwt si pone",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776546916123",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "That's a great question! It looks like you're asking \"What is a bone?\"\n\nBones are the strong, hard parts inside your body. Think of them like the frame of a house!\n\nHere's what bones do:\n\n*   **They give your body shape:** Without bones, you'd be a floppy blob!\n*   **They help you stand tall:** Bones are strong enough to hold you up.\n*   **They protect your insides:** Your skull protects your brain, and your ribs protect your heart and lungs.\n*   **They help you move:** Your muscles pull on your bones to help you walk, run, and jump.\n*   **They store important stuff:** Bones keep important minerals like calcium, which makes them strong.\n\nYou have many bones in your body, all connected to make your skeleton!\n\n[SOURCES::Google Images::https://www.google.com/search?tbm=isch&q=human%20bone::🔍||YouTube::https://www.youtube.com/results?search_query=hwt%20si%20pone::📺||Britannica::https://kids.britannica.com/kids/search/dictionary?query=human%20bone::📚||Wikimedia::https://commons.wikimedia.org/w/index.php?search=human%20bone::🖼️]",
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/4/44/Anatomical_Male_Figure_Showing_Heart%2C_Lungs%2C_and_Main_Arteries.jpg",
             "base64_data": null,
             "mime_type": null,
             "attachment_name": null,
@@ -3723,9 +3747,9 @@
       [
         {
           "date_str": "2026-04-18",
-          "points_earned": 10,
+          "points_earned": 15,
           "games_played": 0,
-          "minutes_played": 1
+          "minutes_played": 3
         },
         {
           "date_str": "2026-03-28",
