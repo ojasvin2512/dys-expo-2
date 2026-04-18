@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
@@ -88,7 +88,8 @@ const AchievementPopup: React.FC<{ achievement: Achievement | null, onClose: () 
         
         const timer = setTimeout(onClose, 5000);
         return () => clearTimeout(timer);
-    }, [achievement, onClose]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [achievement?.id]);
 
     return (
         <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-[60] animate-slide-in-up pointer-events-auto">
@@ -168,11 +169,11 @@ function AppInner() {
   const [timeSpentToday, setTimeSpentToday] = useState<number>(0);
 
   // --- FETCH WITH TIMEOUT (prevents hanging when backend is offline) ---
-  const fetchWithTimeout = (url: string, options: RequestInit = {}, timeoutMs = 3000): Promise<Response> => {
+  const fetchWithTimeout = useCallback((url: string, options: RequestInit = {}, timeoutMs = 3000): Promise<Response> => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timer));
-  };
+  }, []);
 
   // --- CHAT SYNCHRONIZATION HELPERS ---
   const syncSessionToDatabricks = async (session: ChatMetadata) => {
@@ -185,7 +186,8 @@ function AppInner() {
           session_id: session.id,
           user_id: userId,
           title: session.title || 'New Conversation',
-          challenge_id: session.challengeId || null
+          challenge_id: session.challengeId || null,
+          created_at: session.createdAt || Date.now(),
         })
       });
     } catch (e) {
@@ -259,15 +261,17 @@ function AppInner() {
 
   const createNewSession = (lang: Language): ChatMetadata => {
     const id = `chat-${Date.now()}`;
+    const now = Date.now();
     const initialMessages: Message[] = [{
       id: 'init',
       role: 'assistant',
       content: UI_STRINGS[lang]?.welcome || UI_STRINGS.en.welcome
     }];
     
-    const meta = {
+    const meta: ChatMetadata = {
       id,
       title: 'New Chat',
+      createdAt: now,
     };
 
     // Sync to DB
@@ -386,11 +390,15 @@ function AppInner() {
     }
   };
 
+  // Use a ref so the timer always calls the latest updateDailyStats without re-creating the interval
+  const updateDailyStatsRef = useRef(updateDailyStats);
+  useEffect(() => { updateDailyStatsRef.current = updateDailyStats; }); // no deps = runs after every render, intentional ref sync
+
   // Timer for tracking minutes played
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState === 'visible') {
-        updateDailyStats({ minutes: 1 });
+        updateDailyStatsRef.current({ minutes: 1 });
       }
     }, 60000); 
 
@@ -403,9 +411,9 @@ function AppInner() {
 
       const checkGoals = () => {
           const todayStr = new Date().toISOString().split('T')[0];
-          const todayProgress = userData.progressHistory.find(p => p.date === todayStr);
+          const stored = localStorage.getItem(`dyslearn-progress-${todayStr}`);
           
-          if (!todayProgress && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+          if (!stored && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
              new Notification("DysLearn Reminder", {
                  body: "Ready to learn? You haven't started your daily exercises yet!",
                  icon: '/vite.svg'
@@ -415,7 +423,7 @@ function AppInner() {
       
       const interval = setInterval(checkGoals, 3600000);
       return () => clearInterval(interval);
-  }, [notificationsEnabled, userData.progressHistory]);
+  }, [notificationsEnabled]);
 
   // Speech Handlers
   const handleSpeak = (text: string, messageId: string) => {
@@ -607,12 +615,15 @@ function AppInner() {
 
         // Process Chats
         if (chatsRes.success && chatsRes.data.length > 0) {
-           const mappedChats = chatsRes.data.map((c: any) => ({
+           const mappedChats: ChatMetadata[] = chatsRes.data.map((c: any) => ({
               id: c.session_id,
               title: c.title,
+              createdAt: c.created_at || 0,
               challengeSystemPrompt: c.challenge_system_prompt || undefined,
               challengeId: c.challenge_id || undefined
            }));
+           // Sort newest first
+           mappedChats.sort((a, b) => b.createdAt - a.createdAt);
            setChatHistory(mappedChats);
            
            const savedActiveId = localStorage.getItem('dyslearn-activechat');
@@ -745,20 +756,19 @@ function AppInner() {
   useEffect(() => {
     if (isLoading || !activeChatId) return;
     
-    // Sync when generation finishes (isLoading becomes false)
     const activeSession = chatHistory.find(c => c.id === activeChatId);
     if (activeSession) {
       syncSessionToDatabricks(activeSession);
     }
     
-    // Sync the last few messages to guarantee cloud state is consistent
     if (activeMessages.length > 0) {
-      const messagesToSync = activeMessages.slice(-2); // Just the prompt and response for this cycle
+      const messagesToSync = activeMessages.slice(-2);
       messagesToSync.forEach(msg => {
         syncMessageToDatabricks(activeChatId, msg);
       });
     }
-  }, [isLoading]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, activeChatId]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -956,6 +966,7 @@ function AppInner() {
     const newSession: ChatMetadata = {
         id,
         title: challenge.title,
+        createdAt: Date.now(),
         challengeSystemPrompt: challenge.systemPrompt,
         challengeId: challenge.id, 
     };
@@ -988,6 +999,7 @@ Follow these rules:
     const newSession: ChatMetadata = {
         id,
         title: `Explaining: ${concept}`,
+        createdAt: Date.now(),
         challengeSystemPrompt: systemPrompt
     };
 
@@ -1103,7 +1115,7 @@ Follow these rules:
         setActiveMessages(updatedMessages);
         
         const updatedHistory = chatHistory.map(chat => 
-            chat.id === activeChatId ? { ...chat, messages: updatedMessages, lastMessage: entry.title, updatedAt: new Date() } : chat
+            chat.id === activeChatId ? { ...chat } : chat
         );
         setChatHistory(updatedHistory);
         setIsLoading(false);

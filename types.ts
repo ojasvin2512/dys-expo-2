@@ -25,6 +25,7 @@ export interface ChatSession {
 export interface ChatMetadata {
   id: string;
   title: string;
+  createdAt: number; // timestamp ms for ordering
   challengeSystemPrompt?: string;
   challengeId?: string;
 }

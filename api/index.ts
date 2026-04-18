@@ -53,6 +53,7 @@ type ChatRecord = {
   title: string;
   challenge_id: string | null;
   challenge_system_prompt?: string;
+  created_at: number;
   messages: MessageRecord[];
 };
 
@@ -248,7 +249,9 @@ app.delete('/api/user/:userId', (req, res) => {
 
 // Progress
 app.get('/api/progress/:userId', (req, res) => {
-  res.json(ok(progressByUserId.get(req.params.userId) || []));
+  const entries = (progressByUserId.get(req.params.userId) || [])
+    .sort((a, b) => b.date_str.localeCompare(a.date_str));
+  res.json(ok(entries));
 });
 
 app.post('/api/progress/:userId', (req, res) => {
@@ -276,11 +279,13 @@ app.get('/api/user/:userId/achievements', (_req, res) => res.json(ok([])));
 app.get('/api/user/:userId/chats', (req, res) => {
   const chats = Array.from(chatsBySessionId.values())
     .filter(c => c.user_id === req.params.userId)
+    .sort((a, b) => (b.created_at || 0) - (a.created_at || 0)) // newest first
     .map(c => ({
       session_id: c.session_id,
       title: c.title,
       challenge_system_prompt: c.challenge_system_prompt,
       challenge_id: c.challenge_id,
+      created_at: c.created_at || 0,
     }));
   res.json(ok(chats));
 });
@@ -301,6 +306,7 @@ app.post('/api/chats', (req, res) => {
     user_id: body.user_id,
     title: body.title || 'New Chat',
     challenge_id: body.challenge_id ?? null,
+    created_at: body.created_at || Date.now(),
     messages: [],
   };
   chatsBySessionId.set(chat.session_id, chat);

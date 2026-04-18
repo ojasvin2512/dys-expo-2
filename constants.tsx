@@ -7,14 +7,10 @@ import type { Language, Challenge, Achievement, UserData, SkillStats } from './t
 export const GEMINI_TEXT_MODEL =
   (import.meta as any).env?.VITE_GEMINI_TEXT_MODEL || 'gemini-2.0-flash-lite';
 export const GEMINI_TEXT_MODEL_FALLBACKS = [
-  GEMINI_TEXT_MODEL,
-  'gemini-3-flash-preview',
-  'gemini-3-pro-preview',
-  'gemini-3.1-flash-lite-preview',
+  'gemini-2.0-flash-lite',
   'gemini-2.0-flash',
+  'gemini-2.5-flash-lite-preview-06-17',
   'gemini-2.5-flash',
-  'gemini-2.5-pro',
-  'gemini-flash-latest',
 ];
 
 // You can override via Vite env var: VITE_GEMINI_IMAGE_MODEL.
@@ -33,9 +29,8 @@ export const GEMINI_IMAGE_MODELS = [
 ];
 
 export const GEMINI_IMAGE_MODEL_FALLBACKS = [
-  'gemini-3-pro-image-preview',
-  'gemini-3.1-flash-image-preview',
-  'gemini-2.5-flash-image',
+  'gemini-2.0-flash-exp',
+  'gemini-1.5-flash',
 ];
 export const IMAGE_PROMPT_PREFIX = 'IMAGE_PROMPT::';
 export const IMAGE_SUGGESTION = "Tip: You can ask for a specific image by typing '/image' followed by a description of what you want to visualize.";

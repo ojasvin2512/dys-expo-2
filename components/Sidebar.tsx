@@ -94,8 +94,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         setView('history');
     };
 
-    const visibleChats = chatHistory.slice(0, visibleChatsCount);
-    const hasMoreChats = chatHistory.length > visibleChatsCount;
+    const sortedChats = [...chatHistory].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const visibleChats = sortedChats.slice(0, visibleChatsCount);
+    const hasMoreChats = sortedChats.length > visibleChatsCount;
 
     const handleLoadMore = () => {
         setVisibleChatsCount(prev => prev + CHATS_PER_PAGE);

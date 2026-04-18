@@ -141,7 +141,20 @@ export const MessageBubble: React.FC<MessageBubbleProps> = (props) => {
                         src={imageUrl} 
                         alt="Visual Aid" 
                         className="rounded-xl shadow-lg border border-[var(--border-color)] hover:scale-[1.02] transition-transform duration-300 w-full" 
-                        referrerPolicy="no-referrer" 
+                        referrerPolicy="no-referrer"
+                        crossOrigin="anonymous"
+                        onError={(e) => {
+                            const img = e.currentTarget;
+                            // If already tried fallback, hide the image
+                            if (img.dataset.fallback === '1') {
+                                img.style.display = 'none';
+                                return;
+                            }
+                            img.dataset.fallback = '1';
+                            // Try Pollinations as fallback
+                            const altText = img.alt || 'educational illustration';
+                            img.src = `https://image.pollinations.ai/prompt/${encodeURIComponent(altText)}?width=512&height=512&nologo=true`;
+                        }}
                     />
                 </div>
             )}

@@ -378,7 +378,12 @@ export async function fetchRealImage(query: string): Promise<string | null> {
         if (pages) {
             const pageId = Object.keys(pages)[0];
             if (pageId !== '-1' && pages[pageId].original?.source) {
-                return pages[pageId].original.source;
+                // Use Wikimedia image proxy to avoid hotlink blocking
+                const src = pages[pageId].original.source as string;
+                // Only return if it's a proper image format
+                if (/\.(jpg|jpeg|png|gif|svg|webp)(\?|$)/i.test(src)) {
+                    return src;
+                }
             }
         }
         
@@ -396,7 +401,10 @@ export async function fetchRealImage(query: string): Promise<string | null> {
             if (topPages) {
                 const topPageId = Object.keys(topPages)[0];
                 if (topPageId !== '-1' && topPages[topPageId].original?.source) {
-                    return topPages[topPageId].original.source;
+                    const src = topPages[topPageId].original.source as string;
+                    if (/\.(jpg|jpeg|png|gif|svg|webp)(\?|$)/i.test(src)) {
+                        return src;
+                    }
                 }
             }
         }
