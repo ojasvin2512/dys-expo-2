@@ -275,6 +275,21 @@ app.post('/api/progress/:userId', (req, res) => {
 // Achievements
 app.get('/api/user/:userId/achievements', (_req, res) => res.json(ok([])));
 
+// Clear all chats for a user (monthly cleanup)
+app.delete('/api/user/:userId/chats/clear', async (req, res) => {
+  const { userId } = req.params;
+  if (isConnected()) {
+    await runExec(`DELETE FROM dyslearn_messages WHERE user_id = ?`, [userId]);
+    await runExec(`DELETE FROM dyslearn_chats WHERE user_id = ?`, [userId]);
+  } else {
+    for (const [sid, chat] of chatsBySessionId.entries()) {
+      if (chat.user_id === userId) chatsBySessionId.delete(sid);
+    }
+    saveLocalData();
+  }
+  res.json(ok({ cleared: true }));
+});
+
 // Chats
 app.get('/api/user/:userId/chats', (req, res) => {
   const chats = Array.from(chatsBySessionId.values())

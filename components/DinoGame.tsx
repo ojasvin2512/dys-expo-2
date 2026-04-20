@@ -18,12 +18,14 @@ export const DinoGame: React.FC<DinoGameProps> = ({ onGameOver, onToggleExpand }
       const userId = localStorage.getItem('dyslearn-device-id');
       if (userId) {
          try {
-           const r = await fetch(`/api/user/${userId}`);
+           const controller = new AbortController();
+           setTimeout(() => controller.abort(), 2000);
+           const r = await fetch(`/api/user/${userId}`, { signal: controller.signal });
            const res = await r.json();
            if (res.success && res.data) {
                setHighScore(res.data.dino_highscore || 0);
            }
-         } catch (e) { console.error(e); }
+         } catch (e) { /* backend offline, use default score 0 */ }
       }
     };
     fetchScore();

@@ -8,11 +8,14 @@ import { ChatInput } from './components/ChatInput';
 const SettingsModal = React.lazy(() => import('./components/SettingsModal').then(m => ({ default: m.SettingsModal })));
 import { ReadingRuler } from './components/ReadingRuler';
 import type { Message, Theme, CustomInstructions, Language, FileAttachment, ChatSession, ChatMetadata, Challenge, UserData, BackgroundStyle, DyslexiaSettings, SkillStats, Achievement } from './types';
-import { createChat, generateImageForText, generateChatTitle, sendStreamWithFallback, fetchRealImage } from './services/geminiService';
+import { createChat, generateImageForText, generateChatTitle, sendStreamWithFallback, fetchRealImage, isOpenRouterAvailable, sendViaOpenRouter } from './services/geminiService';
 import { IMAGE_PROMPT_PREFIX, IMAGE_SUGGESTION, UI_STRINGS, DAILY_GOAL, MESSAGE_POINTS, CHALLENGES, DAILY_GAME_TARGET, DAILY_MINUTES_TARGET, ACHIEVEMENTS, GEMINI_TEXT_MODEL_FALLBACKS } from './constants';
 import { findEncyclopediaEntry } from './services/encyclopediaService';
 import { findEducationalAsset } from './educationalLibrary';
 import type { Chat } from '@google/genai';
+import { getOfflineSystemPrompt } from './data/offlineQuestions';
+import { initOfflineChallenge, getOpeningMessage, processAnswer, OFFLINE_CHALLENGE_IDS, type OfflineChallengeState } from './services/offlineChallengeEngine';
+import type { StudiesQuizSession } from './components/StudiesView';
 
 // --- Error Boundary ---
 interface ErrorBoundaryState { hasError: boolean; error: Error | null; }
@@ -167,11 +170,24 @@ function AppInner() {
   const [pointAnimation, setPointAnimation] = useState<{ key: number, points: number } | null>(null);
   const [achievementQueue, setAchievementQueue] = useState<Achievement[]>([]);
   const [timeSpentToday, setTimeSpentToday] = useState<number>(0);
+  const offlineChallengeRef = useRef<OfflineChallengeState | null>(null);
+  const studiesQuizRef = useRef<{ questions: any[]; index: number; score: number; sessionId: string } | null>(null);
 
   // Extract timestamp from chat ID like "chat-1234567890"
   const extractTimestampFromId = (id: string): number => {
     const match = id?.match(/(\d{10,})/);
     return match ? parseInt(match[1]) : 0;
+  };
+
+  const formatError = (e: unknown): string => {
+    const msg = e instanceof Error ? e.message : String(e);
+    if (msg === 'QUOTA_EXHAUSTED' || /quota|RESOURCE_EXHAUSTED|limit.*0/i.test(msg)) {
+      return '⚠️ Daily API limit reached. All keys and backup models have been tried.\n\nThe quota resets daily at **1:30 PM IST**.\n\n💡 You can still use offline challenges (Games tab) and the Studies section — they work without any API key!';
+    }
+    if (/timed out/i.test(msg)) {
+      return '⏱️ Request timed out. Please try again.';
+    }
+    return `Sorry, something went wrong. Please try again.`;
   };
 
   // --- FETCH WITH TIMEOUT (prevents hanging when backend is offline) ---
@@ -630,44 +646,29 @@ function AppInner() {
            }));
            // Sort newest first
            mappedChats.sort((a, b) => b.createdAt - a.createdAt);
-           setChatHistory(mappedChats);
-           
-           const savedActiveId = localStorage.getItem('dyslearn-activechat');
-           const activeId = savedActiveId && mappedChats.find((c: any) => c.id === savedActiveId) ? savedActiveId : mappedChats[0].id;
-           setActiveChatId(activeId);
 
-           const msgRes = await fetchWithTimeout(`/api/chats/${activeId}`).then(r => r.json());
-           if (msgRes.success) {
-               const mapped = msgRes.data.map((m: any) => ({
-                  id: m.message_id,
-                  role: m.role,
-                  content: m.content,
-                  imageUrl: m.image_url || undefined,
-                  base64Data: m.base64_data || undefined,
-                  mimeType: m.mime_type || undefined,
-                  attachmentName: m.attachment_name || undefined,
-                  attachmentType: m.attachment_type || undefined,
-                  isLoading: m.is_loading
-               }));
-               // Ensure 'init' goes first, then order by timestamp ID, then by role (user before assistant on ties)
-               mapped.sort((a: any, b: any) => {
-                  if (a.id === 'init') return -1;
-                  if (b.id === 'init') return 1;
-                  const aId = parseInt(a.id.replace(/\D/g, ''));
-                  const bId = parseInt(b.id.replace(/\D/g, ''));
-                  if (!isNaN(aId) && !isNaN(bId) && aId !== bId) return aId - bId;
-                  if (a.role === 'user' && b.role === 'assistant') return -1;
-                  if (a.role === 'assistant' && b.role === 'user') return 1;
-                  return 0;
-               });
-               setActiveMessages(mapped);
-           } else {
-               setActiveMessages([{
-                  id: 'init',
-                  role: 'assistant',
-                  content: UI_STRINGS[language]?.welcome || UI_STRINGS['en'].welcome
-               }]);
-           }
+           // Remove ALL empty "New Chat" entries (no user messages)
+           const nonEmptyChats = mappedChats.filter(c => {
+             if (c.title !== 'New Chat') return true;
+             const saved = localStorage.getItem(`dyslearn-chat-messages-${c.id}`);
+             try {
+               const msgs = saved ? JSON.parse(saved) : [];
+               return msgs.some((m: any) => m.role === 'user');
+             } catch { return false; }
+           });
+
+           // Always create a fresh New Chat on app open
+           const freshSession = createNewSession(language);
+           const cleanedChats = [freshSession, ...nonEmptyChats];
+           setChatHistory(cleanedChats);
+           setActiveChatId(freshSession.id);
+           setActiveMessages([{
+             id: 'init',
+             role: 'assistant',
+             content: UI_STRINGS[language]?.welcome || UI_STRINGS['en'].welcome
+           }]);
+
+           // Fresh session always starts with welcome — no need to load messages
         } else {
            const newSession = createNewSession('en');
            setChatHistory([newSession]);
@@ -691,6 +692,41 @@ function AppInner() {
       }
     };
     initializeData();
+
+    // ── MONTHLY AUTO-CLEANUP ──────────────────────────────────────────────
+    // Check if the month has changed since last cleanup and delete all history
+    const now = new Date();
+    const currentMonthKey = `${now.getFullYear()}-${now.getMonth() + 1}`;
+    const lastCleanupMonth = localStorage.getItem('dyslearn-last-cleanup-month');
+
+    if (lastCleanupMonth && lastCleanupMonth !== currentMonthKey) {
+      // New month — clear all chat history from localStorage
+      const keysToDelete: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('dyslearn-chat-messages-')) {
+          keysToDelete.push(key);
+        }
+      }
+      keysToDelete.forEach(k => localStorage.removeItem(k));
+      localStorage.removeItem('dyslearn-activechat');
+
+      // Also clear from backend if running
+      const userId = localStorage.getItem('dyslearn-device-id');
+      if (userId) {
+        // Fire-and-forget — delete all chats for this user via API
+        fetch(`/api/user/${userId}/chats/clear`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+        }).catch(() => {}); // ignore if backend offline
+      }
+
+      console.log(`[Monthly Cleanup] Chat history cleared for new month: ${currentMonthKey}`);
+    }
+
+    // Always update the cleanup month marker
+    localStorage.setItem('dyslearn-last-cleanup-month', currentMonthKey);
+    // ─────────────────────────────────────────────────────────────────────
   }, []);
   
   useEffect(() => {
@@ -842,7 +878,9 @@ function AppInner() {
   };
 
   const handleNewChat = () => {
-    handleStopSpeech(); 
+    handleStopSpeech();
+    offlineChallengeRef.current = null; // clear any active offline challenge
+    studiesQuizRef.current = null;
     const newSession = createNewSession(language);
     setChatHistory(prev => [newSession, ...prev]);
     setActiveChatId(newSession.id);
@@ -856,7 +894,22 @@ function AppInner() {
 
   const handleSwitchChat = async (id: string) => {
     if (id !== activeChatId) {
-      handleStopSpeech(); 
+      handleStopSpeech();
+      offlineChallengeRef.current = null; // clear offline challenge when switching chats
+      studiesQuizRef.current = null;
+
+      // If the current chat is an empty "New Chat", remove it before switching
+      if (activeChatId) {
+        const currentChat = chatHistory.find(c => c.id === activeChatId);
+        if (currentChat && currentChat.title === 'New Chat') {
+          const hasUserMessages = activeMessages.some(m => m.role === 'user');
+          if (!hasUserMessages) {
+            setChatHistory(prev => prev.filter(c => c.id !== activeChatId));
+            localStorage.removeItem(`dyslearn-chat-messages-${activeChatId}`);
+          }
+        }
+      }
+
       setActiveChatId(id);
       setActiveMessages([]);
       setIsLoading(true); 
@@ -958,8 +1011,29 @@ function AppInner() {
 
     } catch (e) {
       console.error(e);
-      const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
-      const displayError = `Sorry, I ran into a problem starting the challenge: ${errorMessage}`;
+      const msg = e instanceof Error ? e.message : String(e);
+      // Auto-switch to offline mode if quota is exhausted
+      if (msg === 'QUOTA_EXHAUSTED' || /quota|RESOURCE_EXHAUSTED|limit.*0/i.test(msg)) {
+        const challengeId = session.challengeId;
+        if (challengeId && OFFLINE_CHALLENGE_IDS.has(challengeId)) {
+          const offlineState = initOfflineChallenge(challengeId);
+          if (offlineState) {
+            offlineChallengeRef.current = offlineState;
+            const opening = `🔄 **Switched to Offline Mode** — API quota reached.\n\n${getOpeningMessage(offlineState)}`;
+            setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: opening, isLoading: false } : m));
+            setIsLoading(false);
+            return;
+          }
+        }
+        if (challengeId === 'artist-1') {
+          offlineChallengeRef.current = { challengeId: 'artist-1', questionIndex: 0, correctCount: 0, questions: [], storyTurns: 0, waitingForStory: false, attempts: 0 };
+          const artistMsg = `🔄 **Switched to Offline Mode** — API quota reached.\n\n🎨 Welcome to **Magical Artist**!\n\nUse the 🖌️ paintbrush button to draw and I'll give you feedback! What would you like to draw — Alphabets, Numbers, Words, or Objects?`;
+          setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: artistMsg, isLoading: false } : m));
+          setIsLoading(false);
+          return;
+        }
+      }
+      const displayError = `Sorry, I ran into a problem starting the challenge: ${formatError(e)}`;
       setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: displayError, isLoading: false } : m));
     } finally {
       setIsLoading(false);
@@ -977,15 +1051,81 @@ function AppInner() {
         challengeId: challenge.id, 
     };
     
-    // Initialize empty messages for the challenge
     localStorage.setItem(`dyslearn-chat-messages-${id}`, JSON.stringify([]));
-
     setChatHistory(prev => [newSession, ...prev]);
     setActiveChatId(newSession.id);
     setActiveMessages([]);
-    setIsSidebarOpen(false); 
-    
+    setIsSidebarOpen(false);
+
+    // Try offline mode first for supported challenges
+    if (OFFLINE_CHALLENGE_IDS.has(challenge.id)) {
+      const offlineState = initOfflineChallenge(challenge.id);
+      if (offlineState) {
+        offlineChallengeRef.current = offlineState;
+        const opening = getOpeningMessage(offlineState);
+        const assistantMsg: Message = { id: `offline-open-${Date.now()}`, role: 'assistant', content: opening, isLoading: false };
+        setActiveMessages([assistantMsg]);
+        return;
+      }
+    }
+
+    // artist-1 also works offline (drawing feedback without AI)
+    if (challenge.id === 'artist-1') {
+      offlineChallengeRef.current = { challengeId: 'artist-1', questionIndex: 0, correctCount: 0, questions: [], storyTurns: 0, waitingForStory: false, attempts: 0 };
+      const artistOpening = `🎨 Welcome to **Magical Artist**! (Offline Mode)\n\nI'm your art teacher! Let's practice drawing together.\n\nWhat would you like to draw today?\n- **Alphabets** — practice letters A to Z\n- **Numbers** — practice writing 0 to 9\n- **Words** — write simple words like CAT, SUN, TREE\n- **Objects** — draw a house, car, flower, or anything you like!\n\nTell me your choice, then use the 🖌️ **paintbrush button** to draw and send it to me!`;
+      const assistantMsg: Message = { id: `offline-artist-${Date.now()}`, role: 'assistant', content: artistOpening, isLoading: false };
+      setActiveMessages([assistantMsg]);
+      return;
+    }
+
+    offlineChallengeRef.current = null;
     initiateChallenge(newSession);
+  };
+
+  const buildStudiesQuizMessage = (q: any, num: number, total: number, grade: string, subject: string): string => {
+    const emoji: Record<string, string> = { English: '📖', Math: '🔢', Science: '🔬', EVS: '🌿', 'Social Studies': '🗺️', Hindi: '🇮🇳', GK: '💡' };
+    const header = num === 1 ? `${emoji[subject] || '📚'} **${grade} — ${subject} Quiz** — ${total} questions\n\n` : '';
+    let msg = `${header}**Question ${num}/${total}**\n\n${q.question}`;
+    if (q.options && q.options.length > 0) {
+      const labels = ['A', 'B', 'C', 'D'];
+      msg += '\n\n' + q.options.map((opt: string, i: number) => `**${labels[i]}.** ${opt}`).join('\n');
+      msg += '\n\n*Type A, B, C, or D — or type the answer directly. Say **"read"** to hear the question aloud.*';
+    } else {
+      msg += '\n\n*Type your answer. Say **"read"** to hear the question aloud.*';
+    }
+    return msg;
+  };
+
+  const handleStartStudiesQuiz = (session: StudiesQuizSession) => {
+    handleStopSpeech();
+    offlineChallengeRef.current = null;
+    studiesQuizRef.current = null;
+
+    const id = `chat-${Date.now()}`;
+    const title = `${session.grade} — ${session.subject} Quiz`;
+    const newSession: ChatMetadata = { id, title, createdAt: Date.now() };
+
+    // Shuffle and pick up to 10 questions
+    const shuffled = [...session.questions].sort(() => Math.random() - 0.5).slice(0, 10);
+    studiesQuizRef.current = { questions: shuffled, index: 0, score: 0, sessionId: id };
+
+    const q = shuffled[0];
+    const openingMsg = buildStudiesQuizMessage(q, 1, shuffled.length, session.grade, session.subject);
+    const openingMessage: Message = { id: `sq-open-${Date.now()}`, role: 'assistant', content: openingMsg, isLoading: false };
+
+    localStorage.setItem(`dyslearn-chat-messages-${id}`, JSON.stringify([openingMessage]));
+    setChatHistory(prev => [newSession, ...prev]);
+    setActiveChatId(id);
+    setActiveMessages([openingMessage]);
+    setIsSidebarOpen(false);
+
+    // Auto-read first question after a short delay
+    setTimeout(() => {
+      window.speechSynthesis.cancel();
+      const utt = new SpeechSynthesisUtterance(q.question);
+      utt.rate = 0.9;
+      window.speechSynthesis.speak(utt);
+    }, 800);
   };
 
   const handleExplainConcept = async (concept: string) => {
@@ -1087,8 +1227,7 @@ Follow these rules:
 
     } catch (e) {
       console.error(e);
-      const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
-      setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: `Sorry, I couldn't explain that right now: ${errorMessage}`, isLoading: false } : m));
+      setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: formatError(e), isLoading: false } : m));
     } finally {
       setIsLoading(false);
     }
@@ -1097,6 +1236,149 @@ Follow these rules:
   const handleSendMessage = async (userInput: string, attachment: FileAttachment | null) => {
     if (!activeChat || isLoading) return;
     if (!activeChatId) return;
+
+    // ── CONTENT SAFETY FILTER ─────────────────────────────────────────────
+    const dangerousPatterns = /\b(bomb|explosive|weapon|poison|kill|murder|suicide|drug|hack|illegal|terrorist|violence|harm|hurt someone|how to make a|how to build a|how to create a)\b/i;
+    if (dangerousPatterns.test(userInput) && !attachment) {
+      const safetyMsg: Message = {
+        id: Date.now().toString(),
+        role: 'assistant',
+        content: "⚠️ I'm sorry, I can't help with that. I'm a learning assistant designed to help students study safely. Let's talk about something educational instead! 😊",
+        isLoading: false
+      };
+      const userMsg: Message = { id: (Date.now() - 1).toString(), role: 'user', content: userInput };
+      setActiveMessages(prev => [...prev, userMsg, safetyMsg]);
+      return;
+    }
+    // ─────────────────────────────────────────────────────────────────────
+
+    // --- STUDIES QUIZ MODE ---
+    if (studiesQuizRef.current && studiesQuizRef.current.sessionId === activeChatId && !attachment) {
+      const quiz = studiesQuizRef.current;
+      const q = quiz.questions[quiz.index];
+      const userMsg: Message = { id: Date.now().toString(), role: 'user', content: userInput };
+
+      // Read question aloud
+      if (/^read$/i.test(userInput.trim())) {
+        const textToRead = q.question + (q.options ? '. Options: ' + q.options.join(', ') : '');
+        window.speechSynthesis.cancel();
+        const utt = new SpeechSynthesisUtterance(textToRead);
+        utt.rate = 0.9;
+        window.speechSynthesis.speak(utt);
+        const readMsg: Message = { id: (Date.now()+1).toString(), role: 'assistant', content: `🔊 Reading the question aloud for you!`, isLoading: false };
+        setActiveMessages(prev => [...prev, userMsg, readMsg]);
+        return;
+      }
+
+      // Check answer
+      const input = userInput.trim().toLowerCase();
+      let isCorrect = false;
+      const labels = ['a', 'b', 'c', 'd'];
+
+      if (q.options && q.options.length > 0) {
+        const labelIdx = labels.indexOf(input);
+        if (labelIdx >= 0 && labelIdx < q.options.length) {
+          isCorrect = q.options[labelIdx].toLowerCase() === q.answer.toLowerCase();
+        } else {
+          isCorrect = input === q.answer.toLowerCase() ||
+            q.options.some((opt: string) => opt.toLowerCase() === input);
+        }
+      } else {
+        isCorrect = input === q.answer.toLowerCase();
+      }
+
+      quiz.index += 1;
+      if (isCorrect) { quiz.score += 1; updateDailyStats({ points: 10 }); }
+
+      let assistantContent = '';
+      if (isCorrect) {
+        assistantContent = `✅ **Correct!** The answer is **${q.answer}**. Well done! 🎉`;
+      } else {
+        assistantContent = `❌ **Not quite.** The correct answer is **${q.answer}**.`;
+        if (q.options) {
+          const correct = q.options.find((o: string) => o.toLowerCase() === q.answer.toLowerCase());
+          if (correct) assistantContent += `\n\n💡 *${correct}*`;
+        }
+      }
+
+      if (quiz.index >= quiz.questions.length) {
+        const pct = Math.round((quiz.score / quiz.questions.length) * 100);
+        const emoji = pct >= 80 ? '🏆' : pct >= 60 ? '🌟' : '💪';
+        assistantContent += `\n\n---\n\n${emoji} **Quiz Complete!**\nYou scored **${quiz.score}/${quiz.questions.length}** (${pct}%)\n\n${pct >= 80 ? 'Outstanding work! You really know this topic!' : pct >= 60 ? 'Great effort! Keep practicing to improve!' : 'Good try! Review the questions and try again!'}\n\n[CHALLENGE_COMPLETE:${quiz.score * 10}]`;
+        studiesQuizRef.current = null;
+      } else {
+        const nextQ = quiz.questions[quiz.index];
+        assistantContent += '\n\n---\n\n' + buildStudiesQuizMessage(nextQ, quiz.index + 1, quiz.questions.length, '', '');
+      }
+
+      const assistantMsg: Message = { id: (Date.now()+1).toString(), role: 'assistant', content: assistantContent, isLoading: false };
+      setActiveMessages(prev => [...prev, userMsg, assistantMsg]);
+
+      // Auto-read next question
+      if (studiesQuizRef.current) {
+        const nextQ = quiz.questions[quiz.index];
+        setTimeout(() => {
+          window.speechSynthesis.cancel();
+          const utt = new SpeechSynthesisUtterance(nextQ.question);
+          utt.rate = 0.9;
+          window.speechSynthesis.speak(utt);
+        }, 1500);
+      }
+      return;
+    }
+
+    // --- OFFLINE CHALLENGE MODE ---
+    if (offlineChallengeRef.current && !attachment) {
+      const userMsg: Message = { id: Date.now().toString(), role: 'user', content: userInput };
+      const result = processAnswer(offlineChallengeRef.current, userInput);
+      offlineChallengeRef.current = result.newState;
+
+      if (result.points > 0) {
+        updateDailyStats({ points: result.points, skill: activeChat.challengeId as any });
+      }
+      if (result.complete) {
+        offlineChallengeRef.current = null;
+      }
+
+      const assistantMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: result.response,
+        isLoading: false
+      };
+      setActiveMessages(prev => [...prev, userMsg, assistantMsg]);
+      return;
+    }
+
+    // --- OFFLINE DRAWING (Magical Artist) ---
+    if (offlineChallengeRef.current && attachment?.type === 'image' && activeChat.challengeId === 'artist-1') {
+      const userMsg: Message = {
+        id: Date.now().toString(),
+        role: 'user',
+        content: userInput || 'Here is my drawing!',
+        imageUrl: `data:${attachment.mimeType};base64,${attachment.content}`,
+        base64Data: attachment.content,
+        mimeType: attachment.mimeType,
+        attachmentType: 'image',
+      };
+      const praises = [
+        "🎨 Wonderful drawing! I can see you put real effort into that! Great work — you earned some points! [CORRECT_ANSWER:20]",
+        "✨ That looks amazing! Your drawing skills are improving every time! Keep it up! [CORRECT_ANSWER:20]",
+        "🌟 Excellent effort! Drawing takes practice and you're doing brilliantly! [CORRECT_ANSWER:20]",
+        "🏆 Fantastic! I love the creativity in your drawing! You're a true artist! [CORRECT_ANSWER:20]",
+        "🎉 Beautiful work! Every drawing you make helps you improve. Keep practicing! [CORRECT_ANSWER:20]",
+      ];
+      const praise = praises[Math.floor(Math.random() * praises.length)];
+      const assistantMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `${praise}\n\nWould you like to try drawing something else? You can draw:\n- **Alphabets** (A, B, C...)\n- **Numbers** (1, 2, 3...)\n- **Words** (CAT, SUN, TREE...)\n- **Objects** (house, car, flower...)\n\nJust tell me what you'd like to practice next! 🖌️`,
+        isLoading: false
+      };
+      updateDailyStats({ points: 20, skill: 'creativity' });
+      setActiveMessages(prev => [...prev, userMsg, assistantMsg]);
+      return;
+    }
     
     setIsLoading(true);
     updateDailyStats({ points: MESSAGE_POINTS });
@@ -1287,8 +1569,45 @@ Follow these rules:
 
     } catch (e) {
       console.error(e);
-      const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
-      const displayError = `Sorry, I ran into a problem: ${errorMessage}`;
+      const msg = e instanceof Error ? e.message : String(e);
+      // Auto-switch to offline mode if quota is exhausted during a challenge
+      if ((msg === 'QUOTA_EXHAUSTED' || /quota|RESOURCE_EXHAUSTED|limit.*0/i.test(msg)) && activeChat.challengeId) {
+        const challengeId = activeChat.challengeId;
+        if (OFFLINE_CHALLENGE_IDS.has(challengeId)) {
+          const offlineState = initOfflineChallenge(challengeId);
+          if (offlineState) {
+            offlineChallengeRef.current = offlineState;
+            const opening = `🔄 **Switched to Offline Mode** — API quota reached.\n\n${getOpeningMessage(offlineState)}`;
+            setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: opening, isLoading: false } : m));
+            setIsLoading(false);
+            return;
+          }
+        }
+        if (challengeId === 'artist-1') {
+          offlineChallengeRef.current = { challengeId: 'artist-1', questionIndex: 0, correctCount: 0, questions: [], storyTurns: 0, waitingForStory: false, attempts: 0 };
+          const artistMsg = `🔄 **Switched to Offline Mode** — API quota reached.\n\n🎨 Use the 🖌️ paintbrush button to draw and I'll give you feedback!`;
+          setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: artistMsg, isLoading: false } : m));
+          setIsLoading(false);
+          return;
+        }
+      }
+      // Try OpenRouter as final fallback if Gemini quota exhausted
+      const errMsg = e instanceof Error ? e.message : String(e);
+      if ((errMsg === 'QUOTA_EXHAUSTED' || /quota|RESOURCE_EXHAUSTED/i.test(errMsg)) && isOpenRouterAvailable()) {
+        try {
+          setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: '', isLoading: true } : m));
+          const orResponse = await sendViaOpenRouter(
+            `You are a friendly AI Learning Assistant for students with dyslexia, created by Ojasvin Anand. Keep responses simple, clear and encouraging.`,
+            userInput
+          );
+          setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: orResponse, isLoading: false } : m));
+          setIsLoading(false);
+          return;
+        } catch (orErr) {
+          console.warn('OpenRouter also failed:', orErr);
+        }
+      }
+      const displayError = formatError(e);
       setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: displayError, isLoading: false } : m));
     } finally {
       setIsLoading(false);
@@ -1449,8 +1768,7 @@ Follow these rules:
       }
     } catch (e) {
       console.error("Error during regeneration:", e);
-      const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred.';
-      const displayError = `Sorry, I ran into a problem: ${errorMessage}`;
+      const displayError = formatError(e);
       setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: displayError, isLoading: false } : m));
     } finally {
       setIsLoading(false);
@@ -1590,6 +1908,8 @@ Follow these rules:
         onImageProviderChange={(provider) => setUserData(prev => ({ ...prev, selectedImageProvider: provider }))}
         selectedImageModel={userData.selectedImageModel || 'models/gemini-2.5-flash-image'}
         onImageModelChange={(model) => setUserData(prev => ({ ...prev, selectedImageModel: model }))}
+        onGamePlayed={() => updateDailyStats({ games: 1 })}
+        onStartStudiesQuiz={handleStartStudiesQuiz}
       />
       <main className={`flex-1 flex flex-col h-full relative min-w-0 ${bgClass}`}>
         {backgroundStyle === 'cosmic' && (

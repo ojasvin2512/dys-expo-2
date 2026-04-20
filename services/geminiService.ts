@@ -55,6 +55,7 @@ class KeyManager {
         if (this.keys.length === 0) {
             this.keys = ['missing-api-key'];
         }
+        console.log(`[KeyManager] Loaded ${this.keys.length} API keys`);
         this.triedIndices.add(this.currentIndex);
     }
 
@@ -82,21 +83,8 @@ class KeyManager {
                 return true;
             }
         }
-
-        // All non-blacklisted keys tried — check if any non-blacklisted remain for retry
-        for (let i = 1; i < this.keys.length; i++) {
-            const nextIndex = (this.currentIndex + i) % this.keys.length;
-            if (!this.blacklistedIndices.has(nextIndex)) {
-                this.currentIndex = nextIndex;
-                this.triedIndices.clear();
-                this.triedIndices.add(this.currentIndex);
-                console.warn(`[KeyManager] Retrying with key ${this.currentIndex + 1}/${this.keys.length}...`);
-                ai = getAI();
-                return true;
-            }
-        }
-
-        return false; // all keys blacklisted
+        // All keys tried or blacklisted — stop immediately
+        return false;
     }
 
     resetCycle() {
@@ -115,27 +103,123 @@ function getAI() {
 // Variable ai is forward-declared above and initialized here
 ai = getAI();
 
+// ─── OPENROUTER FALLBACK ──────────────────────────────────────────────────────
+// Used automatically when all Gemini keys are exhausted
+let openRouterExhausted = false; // only set true on 402 (no credits)
+let openRouterLastFailTime = 0;  // track when all models were rate-limited
+
+// Free models to try in order (updated April 2026 — verified from OpenRouter API)
+const OPENROUTER_MODELS = [
+    'google/gemma-4-31b-it:free',              // Gemma 4 31B — user requested
+    'google/gemma-3-27b-it:free',              // Gemma 3 27B
+    'google/gemma-3-12b-it:free',              // Gemma 3 12B
+    'meta-llama/llama-3.3-70b-instruct:free',  // Llama 3.3 70B
+    'nvidia/nemotron-3-super-120b-a12b:free',  // NVIDIA 120B
+    'openai/gpt-oss-120b:free',                // OpenAI OSS 120B
+    'qwen/qwen3-coder:free',                   // Qwen3 Coder
+    'nousresearch/hermes-3-llama-3.1-405b:free', // Hermes 405B
+    'meta-llama/llama-3.2-3b-instruct:free',   // Llama 3.2 3B (fast fallback)
+    'google/gemma-3-4b-it:free',               // Gemma 3 4B (fast fallback)
+];
+
+async function sendViaOpenRouter(systemPrompt: string, userMessage: string): Promise<string> {
+    const key = getEnv('OPENROUTER_API_KEY');
+    if (!key) throw new Error('OpenRouter not available');
+    if (openRouterExhausted) throw new Error('OpenRouter credits exhausted');
+    
+    // If all models were rate-limited recently, wait 60s before retrying
+    const timeSinceLastFail = Date.now() - openRouterLastFailTime;
+    if (openRouterLastFailTime > 0 && timeSinceLastFail < 60000) {
+        throw new Error(`OpenRouter rate limited — retry in ${Math.ceil((60000 - timeSinceLastFail) / 1000)}s`);
+    }
+
+    let allRateLimited = true;
+    for (const model of OPENROUTER_MODELS) {
+        try {
+            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${key}`,
+                    'Content-Type': 'application/json',
+                    'HTTP-Referer': 'https://dyslearn.app',
+                    'X-Title': 'DysLearn AI',
+                },
+                body: JSON.stringify({
+                    model,
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: userMessage }
+                    ],
+                    max_tokens: 1024,
+                    temperature: 0.7,
+                })
+            });
+
+            if (!response.ok) {
+                if (response.status === 402) { 
+                    openRouterExhausted = true; 
+                    throw new Error('OpenRouter credits exhausted'); 
+                }
+                if (response.status === 429) {
+                    // Rate limited on this model — try next
+                    console.warn(`OpenRouter model ${model} rate limited (429), trying next...`);
+                    continue;
+                }
+                // 404 or other — model unavailable, try next
+                allRateLimited = false;
+                console.warn(`OpenRouter model ${model} failed (${response.status}), trying next...`);
+                continue;
+            }
+
+            allRateLimited = false; // at least one model responded
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content;
+            if (content) {
+                openRouterLastFailTime = 0; // reset on success
+                console.log(`✅ OpenRouter responded via ${model}`);
+                return content;
+            }
+        } catch (err: any) {
+            if (err.message === 'OpenRouter credits exhausted') throw err;
+            console.warn(`OpenRouter model ${model} error:`, err.message);
+            continue;
+        }
+    }
+
+    // If all were 429, record the time so we can retry after 60s
+    if (allRateLimited) {
+        openRouterLastFailTime = Date.now();
+        throw new Error('All OpenRouter models rate limited — will retry after 60s');
+    }
+    throw new Error('All OpenRouter models failed');
+}
+
+export function isOpenRouterAvailable(): boolean {
+    if (!getEnv('OPENROUTER_API_KEY')) return false;
+    if (openRouterExhausted) return false;
+    // Allow retry after 60s cooldown
+    if (openRouterLastFailTime > 0 && Date.now() - openRouterLastFailTime < 60000) return false;
+    return true;
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 function isQuotaError(err: unknown): boolean {
-    const e: any = err;
-    const code = e?.code ?? e?.status ?? e?.error?.code;
-    const msg = e?.message ?? e?.error?.message ?? '';
-    // Also include common "invalid key" or "unauthorized" errors for rotation
+    const raw = JSON.stringify(err ?? '');
+    const code = (err as any)?.code ?? (err as any)?.status ?? (err as any)?.error?.code;
     return code === 429 || code === 401 || code === 403 ||
-           /RESOURCE_EXHAUSTED|quota exceeded|API_KEY_INVALID|invalid api key|unauthorized|forbidden/i.test(String(msg));
+           /429|RESOURCE_EXHAUSTED|quota exceeded|API_KEY_INVALID|invalid api key|unauthorized|forbidden/i.test(raw);
 }
 
 function isFallbackableError(err: unknown): boolean {
-    const e: any = err;
-    const code = e?.code ?? e?.status ?? e?.error?.code;
-    const msg = e?.message ?? e?.error?.message ?? '';
-    // 404 (Not Found), 400 (Invalid Argument/Bad Request), 503 (Unavailable)
-    return code === 404 || code === 400 || code === 503 || 
-           /NOT_FOUND|not found|INVALID_ARGUMENT|bad request|unavailable/i.test(String(msg));
+    const raw = JSON.stringify(err ?? '');
+    const code = (err as any)?.code ?? (err as any)?.status ?? (err as any)?.error?.code;
+    return code === 404 || code === 400 || code === 503 ||
+           /404|NOT_FOUND|not found|INVALID_ARGUMENT|bad request|503|unavailable/i.test(raw);
 }
 
 function isZeroQuota(err: unknown): boolean {
-    const raw = JSON.stringify(err ?? {});
-    return /limit:\s*0\b/i.test(raw) || /"limit"\s*:\s*0\b/i.test(raw);
+    const raw = JSON.stringify(err ?? '');
+    return /limit.*?:\s*0\b/i.test(raw) || /"limit"\s*:\s*0\b/i.test(raw);
 }
 
 async function withQuotaRetry<T>(fn: () => Promise<T>): Promise<T> {
@@ -147,28 +231,20 @@ async function withQuotaRetry<T>(fn: () => Promise<T>): Promise<T> {
         // If daily quota exhausted, blacklist this key permanently
         if (isZeroQuota(err)) {
             keyManager.blacklist();
+            // Try next key immediately
+            if (keyManager.rotate()) {
+                return await withQuotaRetry(fn);
+            }
+            // All keys exhausted — fail fast
+            throw new Error('QUOTA_EXHAUSTED');
         }
 
-        // Try rotating to next key
+        // Rate limited (per-minute) — try rotating
         if (keyManager.rotate()) {
             return await withQuotaRetry(fn);
         }
 
-        if (isZeroQuota(err)) {
-            throw new Error(
-                "Gemini API daily quota exhausted on all keys. Please add API keys from different Google accounts, or wait until tomorrow for quota reset."
-            );
-        }
-
-        const delayMs = getRetryDelayMs(err, 0); 
-        if (delayMs > 0) {
-            const seconds = Math.ceil(delayMs / 1000);
-            console.warn(`Gemini Quota hit. Retrying in ${seconds}s...`);
-            await new Promise(resolve => setTimeout(resolve, delayMs));
-            return await fn();
-        }
-        
-        throw err;
+        throw new Error('QUOTA_EXHAUSTED');
     }
 }
 
@@ -216,6 +292,8 @@ async function sendStreamWithFallback(
     modelCandidates: string[]
 ) {
     const errors: Error[] = [];
+    const MAX_KEY_ROTATIONS = 8;
+    let rotationCount = 0;
     
     // Reset key cycle
     keyManager.resetCycle();
@@ -225,35 +303,45 @@ async function sendStreamWithFallback(
         if (!model) continue;
 
         try {
-            // Need to get a fresh chat object since 'ai' might have changed due to rotation
             const chat = getChat(model);
             const message = getMessage();
-            return await chat.sendMessageStream({ message });
+            const streamPromise = chat.sendMessageStream({ message });
+            const timeoutPromise = new Promise<never>((_, reject) =>
+                setTimeout(() => reject(new Error('Request timed out after 30s. The API may be overloaded. Please try again.')), 30000)
+            );
+            return await Promise.race([streamPromise, timeoutPromise]);
         } catch (err) {
             const errorMsg = err instanceof Error ? err.message : String(err);
-            console.warn(`Gemini sendMessageStream error with model ${model}:`, errorMsg);
+
+            console.warn(`Gemini sendMessageStream error with model ${model} (rotation ${rotationCount}/${MAX_KEY_ROTATIONS}):`, errorMsg.substring(0, 100));
             errors.push(err instanceof Error ? err : new Error(errorMsg));
 
             if (isQuotaError(err)) {
-                if (keyManager.rotate()) {
-                    // Start over with the new key but same model list
-                    return sendStreamWithFallback(getChat, getMessage, modelCandidates);
+                // Blacklist this key if daily quota is exhausted
+                if (isZeroQuota(err)) {
+                    keyManager.blacklist();
                 }
+
+                // Try next key if we haven't hit the rotation limit
+                if (rotationCount < MAX_KEY_ROTATIONS && keyManager.rotate()) {
+                    rotationCount++;
+                    i = -1; // restart model loop with new key
+                    continue;
+                }
+
+                // All rotations exhausted
+                throw new Error('QUOTA_EXHAUSTED');
             }
 
             if (!isQuotaError(err) && !isFallbackableError(err)) {
                 throw err;
             }
 
-            console.log(`Model ${model} failed (${errorMsg}), trying next fallback...`);
             continue;
         }
     }
 
-    const combined = errors.map(e => e.message).join(' | ');
-    throw new Error(
-        `Gemini API quota exceeded on all candidate models. This usually happens on the free tier after many requests. Please wait a few minutes (approx. 1-2 mins) and try again, or check your Google AI Studio dashboard. Details: ${combined}`
-    );
+    throw new Error('QUOTA_EXHAUSTED');
 }
 
 const baseSystemInstruction = `You are a friendly and patient AI Learning Assistant for students with dyslexia, created by Ojasvin Anand. Your goal is to make information clear, accessible, and engaging.
@@ -279,6 +367,7 @@ Always be encouraging and positive.
 `;
 
 export { sendStreamWithFallback };
+export { sendViaOpenRouter };
 
 export function createChat(customInstructions?: CustomInstructions, language: Language = 'en', messageHistory: Message[] = [], systemPromptOverride?: string, forceModel?: string): Chat {
     let finalSystemInstruction: string;

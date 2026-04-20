@@ -66,7 +66,7 @@ const ProgressBar: React.FC<{ label: string; value: number; max: number; unit?: 
 const MiniLevelMeter: React.FC<{ points: number }> = ({ points }) => {
     const levels = DAILY_GOAL_LEVELS;
     return (
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-0.5 flex-shrink-0 max-w-[80px] overflow-hidden">
             {levels.map((level, index) => {
                 const prevLevel = index > 0 ? levels[index - 1] : 0;
                 const isLevelComplete = points >= level;
@@ -76,14 +76,14 @@ const MiniLevelMeter: React.FC<{ points: number }> = ({ points }) => {
 
                 return (
                     <React.Fragment key={level}>
-                        <div className="w-4 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div className="w-3 h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden flex-shrink-0">
                             <div
                                 className="h-full bg-green-500 transition-all duration-1000"
                                 style={{ width: `${progressPercent}%` }}
                             />
                         </div>
                         <StarIcon
-                            className={`h-3.5 w-3.5 transition-colors duration-500 ${isLevelComplete ? 'text-yellow-400 drop-shadow-sm' : 'text-gray-300 dark:text-gray-600'}`}
+                            className={`h-3 w-3 flex-shrink-0 transition-colors duration-500 ${isLevelComplete ? 'text-yellow-400 drop-shadow-sm' : 'text-gray-300 dark:text-gray-600'}`}
                         />
                     </React.Fragment>
                 );
@@ -142,14 +142,21 @@ export const ProgressView: React.FC<ProgressViewProps> = ({ userData, onStartCha
         }
     }
 
-    // Determine max value for skill bars to scale them nicely
-    const maxSkillPoints = Math.max(50, ...(Object.values(skillStats) as number[]));
+    // Use a fixed max of 500 so skill bars scale properly and don't max out at current highest
+    const maxSkillPoints = 500;
 
     // Logic for Adaptive Learning Recommendation
+    // Sort skills by points (ascending) — weakest first
+    // Skip skills that are already maxed (>= 400) to keep recommendations fresh
     const skills = Object.entries(skillStats) as [keyof SkillStats, number][];
     skills.sort((a, b) => a[1] - b[1]);
     const weakestSkill = skills[0][0];
-    const recommendedChallenge = CHALLENGES.find(c => c.skill === weakestSkill);
+    const weakestScore = skills[0][1];
+    // Find the skill that needs the most improvement relative to the best skill
+    const bestScore = skills[skills.length - 1][1];
+    const gap = bestScore - weakestScore;
+    const recommendedChallenge = CHALLENGES.find(c => c.skill === weakestSkill)
+      || CHALLENGES.find(c => c.skill === skills[1]?.[0]); // fallback to 2nd weakest
 
     const skillColors: Record<keyof SkillStats, string> = {
         vocabulary: 'bg-emerald-500',
@@ -203,7 +210,6 @@ export const ProgressView: React.FC<ProgressViewProps> = ({ userData, onStartCha
                     className="relative overflow-hidden bg-slate-900 rounded-2xl p-5 text-white shadow-xl cursor-pointer group transition-all hover:scale-[1.02] active:scale-[0.98]"
                     onClick={() => onStartChallenge && onStartChallenge(recommendedChallenge)}
                 >
-                    {/* Background Glow */}
                     <div className="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/30 blur-3xl rounded-full group-hover:bg-indigo-500/50 transition-colors"></div>
                     
                     <div className="relative z-10">
@@ -214,18 +220,24 @@ export const ProgressView: React.FC<ProgressViewProps> = ({ userData, onStartCha
                              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-indigo-300">Personalized Mission</span>
                         </div>
                         
-                        <h3 className="text-lg font-bold mb-1 leading-tight">Boost your {weakestSkill}!</h3>
-                        <p className="text-xs text-slate-400 mb-4 font-medium">We noticed you could use some practice here. Ready?</p>
+                        <h3 className="text-lg font-bold mb-1 leading-tight capitalize">
+                          Boost your {weakestSkill}!
+                        </h3>
+                        <p className="text-xs text-slate-400 mb-1 font-medium">
+                          Your {weakestSkill} score is <span className="text-white font-bold">{weakestScore} pts</span>
+                          {gap > 0 && <span> — {gap} pts behind your best skill</span>}
+                        </p>
+                        <p className="text-xs text-slate-500 mb-4">Practice this challenge to improve! 💪</p>
                         
-                        <div className="flex items-center gap-4 bg-white/5 border border-white/10 p-3 rounded-xl backdrop-blur-md">
-                             <div className="p-2 bg-white/10 rounded-lg">
-                                <recommendedChallenge.icon className="h-8 w-8 text-white" />
+                        <div className="flex items-center gap-3 bg-white/5 border border-white/10 p-3 rounded-xl backdrop-blur-md">
+                             <div className="p-2 bg-white/10 rounded-lg flex-shrink-0">
+                                <recommendedChallenge.icon className="h-7 w-7 text-white" />
                              </div>
                              <div className="flex-1 min-w-0">
-                                 <p className="font-bold text-sm truncate">{recommendedChallenge.title}</p>
-                                 <p className="text-[10px] text-slate-400 line-clamp-1">{recommendedChallenge.description}</p>
+                                 <p className="font-bold text-sm">{recommendedChallenge.title}</p>
+                                 <p className="text-[10px] text-slate-400 line-clamp-2 leading-relaxed">{recommendedChallenge.description}</p>
                              </div>
-                             <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/40">
+                             <div className="w-8 h-8 rounded-full bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/40 flex-shrink-0">
                                 <PlayIcon className="h-4 w-4 text-white" />
                              </div>
                         </div>
@@ -294,11 +306,11 @@ export const ProgressView: React.FC<ProgressViewProps> = ({ userData, onStartCha
                 <div className="space-y-2">
                     {progressHistory.length > 0 ? (
                         sortedHistory.map((day) => (
-                            <div key={day.date} className="bg-[var(--bg-primary)] p-4 rounded-2xl border border-[var(--border-color)] flex justify-between items-center transition-all hover:border-[var(--accent-color)]">
-                                <div>
-                                    <p className="font-black text-[var(--text-primary)] text-sm tracking-tight">{formatDate(day.date)}</p>
+                            <div key={day.date} className="bg-[var(--bg-primary)] p-3 rounded-2xl border border-[var(--border-color)] flex justify-between items-center gap-2 transition-all hover:border-[var(--accent-color)] overflow-hidden">
+                                <div className="min-w-0 flex-1">
+                                    <p className="font-black text-[var(--text-primary)] text-sm tracking-tight truncate">{formatDate(day.date)}</p>
                                     <div className="flex items-center gap-2 mt-0.5">
-                                        <span className="text-[10px] font-bold text-green-500 uppercase">{day.points} points</span>
+                                        <span className="text-[10px] font-bold text-green-500 uppercase">{day.points} pts</span>
                                         <span className="text-[10px] text-[var(--text-secondary)]">•</span>
                                         <span className="text-[10px] font-bold text-blue-500 uppercase">{day.gamesPlayed} games</span>
                                     </div>

@@ -4,6 +4,7 @@ import type { ChatMetadata, Challenge, UserData, ImageProvider } from '../types'
 import { NewChatIcon, CloseIcon, MessageIcon, TrashIcon, TrophyIcon, ChartBarIcon, LightBulbIcon, DinoIcon, BirdIcon, TetrisIcon, CHALLENGES } from '../constants';
 import { ProgressView } from './ProgressView';
 import { ConceptExplainer } from './ConceptExplainer';
+import { StudiesView, type StudiesQuizSession } from './StudiesView';
 const DinoGame = React.lazy(() => import('./DinoGame').then(m => ({ default: m.DinoGame })));
 const FlappyBird = React.lazy(() => import('./FlappyBird').then(m => ({ default: m.FlappyBird })));
 const Tetris = React.lazy(() => import('./Tetris').then(m => ({ default: m.Tetris })));
@@ -26,6 +27,8 @@ interface SidebarProps {
   onImageProviderChange: (provider: ImageProvider) => void;
   selectedImageModel: string;
   onImageModelChange: (modelId: string) => void;
+  onGamePlayed: () => void;
+  onStartStudiesQuiz: (session: StudiesQuizSession) => void;
 }
 
 const ChallengeList: React.FC<{ onStartChallenge: (challenge: Challenge) => void }> = ({ onStartChallenge }) => (
@@ -64,9 +67,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   selectedImageProvider,
   onImageProviderChange,
   selectedImageModel,
-  onImageModelChange
+  onImageModelChange,
+  onGamePlayed,
+  onStartStudiesQuiz,
 }) => {
-    const [view, setView] = useState<'history' | 'challenges' | 'progress' | 'explain' | 'arcade'>('history');
+    const [view, setView] = useState<'history' | 'challenges' | 'progress' | 'explain' | 'arcade' | 'studies'>('history');
     const [arcadeGame, setArcadeGame] = useState<'dino' | 'flappy' | 'tetris'>('dino');
     const [isExpanded, setIsExpanded] = useState(false);
     const [visibleChatsCount, setVisibleChatsCount] = useState(CHATS_PER_PAGE);
@@ -140,6 +145,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <button onClick={() => setView('progress')} aria-label="View Progress" className={`flex-shrink-0 px-3 py-1.5 text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 transition-colors ${view === 'progress' ? 'bg-[var(--accent-color)] text-white' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'}`}>
                         <ChartBarIcon className="h-3.5 w-3.5" /> Stats
                     </button>
+                    <button onClick={() => setView('studies')} aria-label="Study Indian Curriculum" className={`flex-shrink-0 px-3 py-1.5 text-xs font-semibold rounded-md flex items-center justify-center gap-1.5 transition-colors ${view === 'studies' ? 'bg-[var(--accent-color)] text-white' : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]'}`}>
+                        📚 Studies
+                    </button>
                 </div>
             </div>
             {/* Content */}
@@ -211,17 +219,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         <div className="mt-4">
                             {!isExpanded && (
                                 <React.Suspense fallback={<div className="flex items-center justify-center p-8 bg-[var(--bg-primary)] rounded-lg border border-dashed border-[var(--border-color)] text-[var(--text-secondary)] text-xs">Loading game...</div>}>
-                                    {arcadeGame === 'dino' && <DinoGame onToggleExpand={() => setIsExpanded(true)} />}
-                                    {arcadeGame === 'flappy' && <FlappyBird onToggleExpand={() => setIsExpanded(true)} />}
-                                    {arcadeGame === 'tetris' && <Tetris onToggleExpand={() => setIsExpanded(true)} />}
+                                    {arcadeGame === 'dino' && <DinoGame onGameOver={onGamePlayed} onToggleExpand={() => setIsExpanded(true)} />}
+                                    {arcadeGame === 'flappy' && <FlappyBird onGameOver={onGamePlayed} onToggleExpand={() => setIsExpanded(true)} />}
+                                    {arcadeGame === 'tetris' && <Tetris onGameOver={onGamePlayed} onToggleExpand={() => setIsExpanded(true)} />}
                                 </React.Suspense>
                             )}
                         </div>
                     </div>
+                ) : view === 'studies' ? (
+                    <StudiesView onStartQuiz={(session) => { onStartStudiesQuiz(session); setView('history'); }} />
                 ) : (
                     <ProgressView userData={userData} onStartChallenge={handleStartChallenge} />
-                )}
-            </nav>
+                )}            </nav>
 
             {/* Delete Confirmation Modal */}
             {chatToDelete && (
@@ -265,9 +274,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <div className="flex-1 flex items-center justify-center p-4 overflow-auto">
                         <div className="w-full max-w-sm">
                             <React.Suspense fallback={<div className="text-[var(--text-secondary)] font-bold">LOADING ARCADIA...</div>}>
-                                {arcadeGame === 'dino' && <DinoGame onToggleExpand={() => setIsExpanded(false)} />}
-                                {arcadeGame === 'flappy' && <FlappyBird onToggleExpand={() => setIsExpanded(false)} />}
-                                {arcadeGame === 'tetris' && <Tetris onToggleExpand={() => setIsExpanded(false)} />}
+                                {arcadeGame === 'dino' && <DinoGame onGameOver={onGamePlayed} onToggleExpand={() => setIsExpanded(false)} />}
+                                {arcadeGame === 'flappy' && <FlappyBird onGameOver={onGamePlayed} onToggleExpand={() => setIsExpanded(false)} />}
+                                {arcadeGame === 'tetris' && <Tetris onGameOver={onGamePlayed} onToggleExpand={() => setIsExpanded(false)} />}
                             </React.Suspense>
                         </div>
                     </div>

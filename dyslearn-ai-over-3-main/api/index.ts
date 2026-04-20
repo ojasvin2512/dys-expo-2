@@ -9,9 +9,6 @@ import dotenv from 'dotenv';
 import { getDb, runQuery, runExec, isConnected } from '../db/databricks';
 import { initSchema } from '../db/schema';
 dotenv.config();
-import dotenv from 'dotenv';
-import { getDb, runQuery, runExec, isConnected } from '../db/databricks';
-import { initSchema } from '../db/schema';
 
 dotenv.config();
 
