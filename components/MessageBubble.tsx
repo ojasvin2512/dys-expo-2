@@ -183,16 +183,34 @@ export const MessageBubble: React.FC<MessageBubbleProps> = (props) => {
                                 return { name: parts[0] || '', url: parts[1] || '#', icon: parts[2] || '🔗' };
                             }).filter(s => s.url && s.url !== '#' && s.name);
 
+                            // Map source names to favicon images
+                            const faviconMap: Record<string, string> = {
+                                'Google Images': 'https://www.google.com/favicon.ico',
+                                'YouTube': 'https://www.youtube.com/favicon.ico',
+                                'Britannica': 'https://www.britannica.com/favicon.ico',
+                                'Wikimedia': 'https://commons.wikimedia.org/static/favicon/commons.ico',
+                            };
+
                             return (
                                 <div className="mt-4 flex flex-wrap gap-2 animate-fadeInFast">
                                     {sources.map((source, idx) => (
                                         <a 
                                             key={idx}
                                             href={source.url}
-                                            target="_self"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 border border-[var(--border-color)] text-xs font-medium transition-all hover:translate-y-[-1px] hover:shadow-sm"
                                         >
-                                            <span>{source.icon}</span>
+                                            {faviconMap[source.name] ? (
+                                                <img 
+                                                    src={faviconMap[source.name]} 
+                                                    alt={source.name}
+                                                    className="w-3.5 h-3.5 rounded-sm object-contain"
+                                                    onError={(e) => { (e.currentTarget as HTMLImageElement).style.display='none'; }}
+                                                />
+                                            ) : (
+                                                <span>{source.icon}</span>
+                                            )}
                                             <span className="opacity-80">{source.name}</span>
                                             <span className="ml-1 opacity-40 text-[10px]">+1</span>
                                         </a>
