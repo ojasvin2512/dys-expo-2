@@ -9,7 +9,6 @@ export const GEMINI_TEXT_MODEL =
 export const GEMINI_TEXT_MODEL_FALLBACKS = [
   'gemini-2.0-flash-lite',
   'gemini-2.0-flash',
-  'gemini-2.5-flash-lite-preview-06-17',
   'gemini-2.5-flash',
 ];
 

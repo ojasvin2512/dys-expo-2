@@ -168,6 +168,12 @@ function AppInner() {
   const [achievementQueue, setAchievementQueue] = useState<Achievement[]>([]);
   const [timeSpentToday, setTimeSpentToday] = useState<number>(0);
 
+  // Extract timestamp from chat ID like "chat-1234567890"
+  const extractTimestampFromId = (id: string): number => {
+    const match = id?.match(/(\d{10,})/);
+    return match ? parseInt(match[1]) : 0;
+  };
+
   // --- FETCH WITH TIMEOUT (prevents hanging when backend is offline) ---
   const fetchWithTimeout = useCallback((url: string, options: RequestInit = {}, timeoutMs = 3000): Promise<Response> => {
     const controller = new AbortController();
@@ -618,7 +624,7 @@ function AppInner() {
            const mappedChats: ChatMetadata[] = chatsRes.data.map((c: any) => ({
               id: c.session_id,
               title: c.title,
-              createdAt: c.created_at || 0,
+              createdAt: c.created_at || extractTimestampFromId(c.session_id),
               challengeSystemPrompt: c.challenge_system_prompt || undefined,
               challengeId: c.challenge_id || undefined
            }));

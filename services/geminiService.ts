@@ -28,6 +28,7 @@ class KeyManager {
     private keys: string[] = [];
     private currentIndex: number = 0;
     private triedIndices: Set<number> = new Set();
+    private blacklistedIndices: Set<number> = new Set(); // permanently exhausted for today
 
     constructor() {
         this.loadKeys();
@@ -61,27 +62,45 @@ class KeyManager {
         return this.keys[this.currentIndex];
     }
 
+    // Call this when a key hits daily quota (limit: 0) — permanently skip it
+    blacklist() {
+        this.blacklistedIndices.add(this.currentIndex);
+        console.warn(`[KeyManager] Key ${this.currentIndex + 1}/${this.keys.length} daily quota exhausted, blacklisting.`);
+    }
+
     rotate(): boolean {
         if (this.keys.length <= 1) return false;
         
-        let nextIndex = (this.currentIndex + 1) % this.keys.length;
-        
-        if (this.triedIndices.has(nextIndex)) {
-            // We've tried all keys in this cycle
-            return false;
+        // Find next non-blacklisted, non-tried key
+        for (let i = 1; i < this.keys.length; i++) {
+            const nextIndex = (this.currentIndex + i) % this.keys.length;
+            if (!this.blacklistedIndices.has(nextIndex) && !this.triedIndices.has(nextIndex)) {
+                this.currentIndex = nextIndex;
+                this.triedIndices.add(this.currentIndex);
+                console.warn(`[KeyManager] Switching to API key ${this.currentIndex + 1}/${this.keys.length}...`);
+                ai = getAI();
+                return true;
+            }
         }
 
-        this.currentIndex = nextIndex;
-        this.triedIndices.add(this.currentIndex);
-        
-        console.warn(`[KeyManager] Switching to alternative API key (Key ${this.currentIndex + 1}/${this.keys.length})...`);
-        
-        // Update the global instance so subsequent calls use the new key
-        ai = getAI();
-        return true;
+        // All non-blacklisted keys tried — check if any non-blacklisted remain for retry
+        for (let i = 1; i < this.keys.length; i++) {
+            const nextIndex = (this.currentIndex + i) % this.keys.length;
+            if (!this.blacklistedIndices.has(nextIndex)) {
+                this.currentIndex = nextIndex;
+                this.triedIndices.clear();
+                this.triedIndices.add(this.currentIndex);
+                console.warn(`[KeyManager] Retrying with key ${this.currentIndex + 1}/${this.keys.length}...`);
+                ai = getAI();
+                return true;
+            }
+        }
+
+        return false; // all keys blacklisted
     }
 
     resetCycle() {
+        // Only clear tried indices, keep blacklist intact
         this.triedIndices.clear();
         this.triedIndices.add(this.currentIndex);
     }
@@ -116,18 +135,7 @@ function isFallbackableError(err: unknown): boolean {
 
 function isZeroQuota(err: unknown): boolean {
     const raw = JSON.stringify(err ?? {});
-    // The Gemini REST error message often includes: "limit: 0"
     return /limit:\s*0\b/i.test(raw) || /"limit"\s*:\s*0\b/i.test(raw);
-}
-
-function getRetryDelayMs(err: unknown, fallbackMs: number): number {
-    const raw = JSON.stringify(err ?? {});
-    const m = raw.match(/"retryDelay"\s*:\s*"(\d+)s"/);
-    if (m?.[1]) {
-        const seconds = Number(m[1]);
-        if (Number.isFinite(seconds) && seconds >= 0) return seconds * 1000;
-    }
-    return fallbackMs;
 }
 
 async function withQuotaRetry<T>(fn: () => Promise<T>): Promise<T> {
@@ -136,26 +144,26 @@ async function withQuotaRetry<T>(fn: () => Promise<T>): Promise<T> {
     } catch (err) {
         if (!isQuotaError(err)) throw err;
 
-        // Try rotating the API key if possible
+        // If daily quota exhausted, blacklist this key permanently
+        if (isZeroQuota(err)) {
+            keyManager.blacklist();
+        }
+
+        // Try rotating to next key
         if (keyManager.rotate()) {
-            // Important: We need to recreate the AI instance or call the function again
-            // Since `fn` usually refers to `ai.models...`, and we updated `ai` in `rotate()`,
-            // calling `fn()` again will use the new `ai` instance.
             return await withQuotaRetry(fn);
         }
 
         if (isZeroQuota(err)) {
             throw new Error(
-                "Gemini API quota is 0 for all available keys. Add a valid Gemini API key with quota enabled (or enable billing)."
+                "Gemini API daily quota exhausted on all keys. Please add API keys from different Google accounts, or wait until tomorrow for quota reset."
             );
         }
 
-        // Use 0ms as the default fallback to skip the artificial wait time.
-        // We only wait if the API explicitly tells us to wait a specific duration.
         const delayMs = getRetryDelayMs(err, 0); 
         if (delayMs > 0) {
             const seconds = Math.ceil(delayMs / 1000);
-            console.warn(`Gemini Quota hit. Server requested wait format. Retrying in ${seconds}s...`);
+            console.warn(`Gemini Quota hit. Retrying in ${seconds}s...`);
             await new Promise(resolve => setTimeout(resolve, delayMs));
             return await fn();
         }

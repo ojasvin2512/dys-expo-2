@@ -11,8 +11,8 @@
         "custom_instructions_about_user": "",
         "custom_instructions_how_to_respond": "",
         "notifications_enabled": false,
-        "total_points": 40,
-        "skill_vocabulary": 24,
+        "total_points": 75,
+        "skill_vocabulary": 45,
         "skill_grammar": 0,
         "skill_spelling": 0,
         "skill_phonetics": 0,
@@ -3568,6 +3568,30 @@
             "attachment_name": null,
             "attachment_type": null,
             "is_loading": false
+          },
+          {
+            "message_id": "1776683824218",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "brwn fx juwps he qick",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683824219",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Sorry, I ran into a problem: Gemini API quota exceeded on all candidate models. This usually happens on the free tier after many requests. Please wait a few minutes (approx. 1-2 mins) and try again, or check your Google AI Studio dashboard. Details: {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 429,\\n    \\\"message\\\": \\\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-lite\\\\nPlease retry in 55.191472735s.\\\",\\n    \\\"status\\\": \\\"RESOURCE_EXHAUSTED\\\",\\n    \\\"details\\\": [\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.Help\\\",\\n        \\\"links\\\": [\\n          {\\n            \\\"description\\\": \\\"Learn more about Gemini API quotas\\\",\\n            \\\"url\\\": \\\"https://ai.google.dev/gemini-api/docs/rate-limits\\\"\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.QuotaFailure\\\",\\n        \\\"violations\\\": [\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash-lite\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"model\\\": \\\"gemini-2.0-flash-lite\\\",\\n              \\\"location\\\": \\\"global\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\\\",\\n            \\\"quotaId\\\": \\\"GenerateContentInputTokensPerModelPerMinute-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash-lite\\\"\\n            }\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.RetryInfo\\\",\\n        \\\"retryDelay\\\": \\\"55s\\\"\\n      }\\n    ]\\n  }\\n}\\n\",\"code\":429,\"status\":\"\"}} | {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 429,\\n    \\\"message\\\": \\\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\\\nPlease retry in 54.818664218s.\\\",\\n    \\\"status\\\": \\\"RESOURCE_EXHAUSTED\\\",\\n    \\\"details\\\": [\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.Help\\\",\\n        \\\"links\\\": [\\n          {\\n            \\\"description\\\": \\\"Learn more about Gemini API quotas\\\",\\n            \\\"url\\\": \\\"https://ai.google.dev/gemini-api/docs/rate-limits\\\"\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.QuotaFailure\\\",\\n        \\\"violations\\\": [\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\\\",\\n            \\\"quotaId\\\": \\\"GenerateContentInputTokensPerModelPerMinute-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash\\\"\\n            }\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.RetryInfo\\\",\\n        \\\"retryDelay\\\": \\\"54s\\\"\\n      }\\n    ]\\n  }\\n}\\n\",\"code\":429,\"status\":\"\"}} | {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 404,\\n    \\\"message\\\": \\\"models/gemini-2.5-flash-lite-preview-06-17 is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\\\",\\n    \\\"status\\\": \\\"NOT_FOUND\\\"\\n  }\\n}\\n\",\"code\":404,\"status\":\"\"}} | {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 503,\\n    \\\"message\\\": \\\"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\\\",\\n    \\\"status\\\": \\\"UNAVAILABLE\\\"\\n  }\\n}\\n\",\"code\":503,\"status\":\"\"}}",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
           }
         ]
       }
@@ -3739,12 +3763,294 @@
           }
         ]
       }
+    ],
+    [
+      "chat-1776683882475",
+      {
+        "session_id": "chat-1776683882475",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776683882475,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683884517",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "hey",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683884518",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello there! It's great to hear from you.\n\nHow can I help you learn something new or make things clearer today? Just let me know! 😊",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683897528",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "wht is cake]",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683897529",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "That's a fun question!\n\nA **cake** is a sweet baked food. Think of it like a special kind of bread, but much softer and sweeter!\n\nHere's what makes it special:\n*   **Ingredients:** It's usually made from flour, sugar, eggs, and butter or oil. These are mixed together to make a soft batter.\n*   **Baking:** This batter is then baked in an oven until it's light and fluffy.\n*   **Sweet Toppings:** After it cools, people often put sweet frosting, icing, or decorations on top. This makes it even more delicious and pretty!\n\nPeople usually eat cake for celebrations like birthdays, weddings, or just as a yummy dessert.\n\n[SOURCES::Google Images::https://www.google.com/search?tbm=isch&q=slice%20of%20cake::🔍||YouTube::https://www.youtube.com/results?search_query=wht%20is%20cake%5D::📺||Britannica::https://kids.britannica.com/kids/search/dictionary?query=slice%20of%20cake::📚||Wikimedia::https://commons.wikimedia.org/w/index.php?search=slice%20of%20cake::🖼️]",
+            "image_url": "https://upload.wikimedia.org/wikipedia/commons/0/04/Pound_layer_cake.jpg",
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776683911679",
+      {
+        "session_id": "chat-1776683911679",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "Sentence Scramble",
+        "challenge_id": "scramble-1",
+        "created_at": 1776683911679,
+        "messages": [
+          {
+            "message_id": "challenge-begin-chat-1776683911679",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "Let's start the challenge!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "challenge-start-chat-1776683911679",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Welcome to the Sentence Scramble challenge! Are you ready to unscramble some words and make perfect sentences? Let's begin!\n\nHere is your first scrambled sentence:\n\n**jumps the fox brown quick**",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683931135",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "the brwn fx jums quick",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683931136",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "That's a good try! You got most of the words right, but there are a couple of small changes needed. Remember to use all the words given.\n\nGive it another shot! You can do it!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683955136",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "the brown fox jumps quick",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683955137",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Almost there! You're super close! You've got all the words now, but think about which word usually comes before \"fox\" when you describe it.\n\nTry again, you're doing great!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683983337",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "idk the answer",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776683983338",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "No worries at all! It's a tricky one sometimes.\n\nHere's a little hint: Think about the order of the words that describe the fox. We often say \"how\" something is before \"what color\" it is. And where does the action word, 'jumps', usually go in a sentence?\n\nYou're doing great, keep trying!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776684008061",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "can u tell me the answer?",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776684008062",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Sorry, I ran into a problem: Gemini API quota exceeded on all candidate models. This usually happens on the free tier after many requests. Please wait a few minutes (approx. 1-2 mins) and try again, or check your Google AI Studio dashboard. Details: {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 429,\\n    \\\"message\\\": \\\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-lite\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\\\\nPlease retry in 51.637449812s.\\\",\\n    \\\"status\\\": \\\"RESOURCE_EXHAUSTED\\\",\\n    \\\"details\\\": [\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.Help\\\",\\n        \\\"links\\\": [\\n          {\\n            \\\"description\\\": \\\"Learn more about Gemini API quotas\\\",\\n            \\\"url\\\": \\\"https://ai.google.dev/gemini-api/docs/rate-limits\\\"\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.QuotaFailure\\\",\\n        \\\"violations\\\": [\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\\\",\\n            \\\"quotaId\\\": \\\"GenerateContentInputTokensPerModelPerMinute-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"model\\\": \\\"gemini-2.0-flash-lite\\\",\\n              \\\"location\\\": \\\"global\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"model\\\": \\\"gemini-2.0-flash-lite\\\",\\n              \\\"location\\\": \\\"global\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash-lite\\\"\\n            }\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.RetryInfo\\\",\\n        \\\"retryDelay\\\": \\\"51s\\\"\\n      }\\n    ]\\n  }\\n}\\n\",\"code\":429,\"status\":\"\"}} | {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 429,\\n    \\\"message\\\": \\\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\\\\nPlease retry in 51.480819308s.\\\",\\n    \\\"status\\\": \\\"RESOURCE_EXHAUSTED\\\",\\n    \\\"details\\\": [\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.Help\\\",\\n        \\\"links\\\": [\\n          {\\n            \\\"description\\\": \\\"Learn more about Gemini API quotas\\\",\\n            \\\"url\\\": \\\"https://ai.google.dev/gemini-api/docs/rate-limits\\\"\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.QuotaFailure\\\",\\n        \\\"violations\\\": [\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\\\",\\n            \\\"quotaId\\\": \\\"GenerateContentInputTokensPerModelPerMinute-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"model\\\": \\\"gemini-2.0-flash\\\",\\n              \\\"location\\\": \\\"global\\\"\\n            }\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.RetryInfo\\\",\\n        \\\"retryDelay\\\": \\\"51s\\\"\\n      }\\n    ]\\n  }\\n}\\n\",\"code\":429,\"status\":\"\"}} | {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 404,\\n    \\\"message\\\": \\\"models/gemini-2.5-flash-lite-preview-06-17 is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\\\",\\n    \\\"status\\\": \\\"NOT_FOUND\\\"\\n  }\\n}\\n\",\"code\":404,\"status\":\"\"}} | {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 503,\\n    \\\"message\\\": \\\"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\\\",\\n    \\\"status\\\": \\\"UNAVAILABLE\\\"\\n  }\\n}\\n\",\"code\":503,\"status\":\"\"}}",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776684051964",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Sorry, I ran into a problem: Gemini API quota exceeded on all candidate models. This usually happens on the free tier after many requests. Please wait a few minutes (approx. 1-2 mins) and try again, or check your Google AI Studio dashboard. Details: {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 429,\\n    \\\"message\\\": \\\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash-lite\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash-lite\\\\nPlease retry in 7.613981481s.\\\",\\n    \\\"status\\\": \\\"RESOURCE_EXHAUSTED\\\",\\n    \\\"details\\\": [\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.Help\\\",\\n        \\\"links\\\": [\\n          {\\n            \\\"description\\\": \\\"Learn more about Gemini API quotas\\\",\\n            \\\"url\\\": \\\"https://ai.google.dev/gemini-api/docs/rate-limits\\\"\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.QuotaFailure\\\",\\n        \\\"violations\\\": [\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash-lite\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash-lite\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\\\",\\n            \\\"quotaId\\\": \\\"GenerateContentInputTokensPerModelPerMinute-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash-lite\\\"\\n            }\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.RetryInfo\\\",\\n        \\\"retryDelay\\\": \\\"7s\\\"\\n      }\\n    ]\\n  }\\n}\\n\",\"code\":429,\"status\":\"\"}} | {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 429,\\n    \\\"message\\\": \\\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\\\\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\\\\nPlease retry in 7.463121365s.\\\",\\n    \\\"status\\\": \\\"RESOURCE_EXHAUSTED\\\",\\n    \\\"details\\\": [\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.Help\\\",\\n        \\\"links\\\": [\\n          {\\n            \\\"description\\\": \\\"Learn more about Gemini API quotas\\\",\\n            \\\"url\\\": \\\"https://ai.google.dev/gemini-api/docs/rate-limits\\\"\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.QuotaFailure\\\",\\n        \\\"violations\\\": [\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_requests\\\",\\n            \\\"quotaId\\\": \\\"GenerateRequestsPerMinutePerProjectPerModel-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash\\\"\\n            }\\n          },\\n          {\\n            \\\"quotaMetric\\\": \\\"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count\\\",\\n            \\\"quotaId\\\": \\\"GenerateContentInputTokensPerModelPerMinute-FreeTier\\\",\\n            \\\"quotaDimensions\\\": {\\n              \\\"location\\\": \\\"global\\\",\\n              \\\"model\\\": \\\"gemini-2.0-flash\\\"\\n            }\\n          }\\n        ]\\n      },\\n      {\\n        \\\"@type\\\": \\\"type.googleapis.com/google.rpc.RetryInfo\\\",\\n        \\\"retryDelay\\\": \\\"7s\\\"\\n      }\\n    ]\\n  }\\n}\\n\",\"code\":429,\"status\":\"\"}} | {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 404,\\n    \\\"message\\\": \\\"models/gemini-2.5-flash-lite-preview-06-17 is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\\\",\\n    \\\"status\\\": \\\"NOT_FOUND\\\"\\n  }\\n}\\n\",\"code\":404,\"status\":\"\"}} | {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 503,\\n    \\\"message\\\": \\\"This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.\\\",\\n    \\\"status\\\": \\\"UNAVAILABLE\\\"\\n  }\\n}\\n\",\"code\":503,\"status\":\"\"}}",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776684290365",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Of course! No problem at all.\n\nThe correct sentence is:\n\n**The quick brown fox jumps.**\n\nThis sentence is famous because it uses every letter of the alphabet!\n\nWould you like to try another scrambled sentence, or maybe we can try something else? You're doing a fantastic job!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776684313336",
+      {
+        "session_id": "chat-1776684313336",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776684313336,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776691012720",
+      {
+        "session_id": "chat-1776691012720",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776691012720,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
     ]
   ],
   "progress": [
     [
       "f23c69ef-d323-44d5-aa18-17cf35c8b195",
       [
+        {
+          "date_str": "2026-04-20",
+          "points_earned": 35,
+          "games_played": 0,
+          "minutes_played": 6
+        },
         {
           "date_str": "2026-04-18",
           "points_earned": 15,

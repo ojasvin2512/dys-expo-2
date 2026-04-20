@@ -94,7 +94,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         setView('history');
     };
 
-    const sortedChats = [...chatHistory].sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    const sortedChats = [...chatHistory].sort((a, b) => {
+        const aTime = a.createdAt || parseInt(a.id?.match(/(\d{10,})/)?.[1] || '0');
+        const bTime = b.createdAt || parseInt(b.id?.match(/(\d{10,})/)?.[1] || '0');
+        return bTime - aTime;
+    });
     const visibleChats = sortedChats.slice(0, visibleChatsCount);
     const hasMoreChats = sortedChats.length > visibleChatsCount;
 
