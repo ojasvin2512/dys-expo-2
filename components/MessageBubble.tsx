@@ -92,7 +92,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = (props) => {
         {isUser ? <UserIcon /> : <AssistantIcon />}
       </div>
       <div
-        className={`flex-1 max-w-[85%] sm:max-w-xl lg:max-w-2xl px-4 py-3 rounded-lg shadow-sm transition-colors ${bubbleStyles}`}
+        className={`flex-1 max-w-[85%] sm:max-w-xl lg:max-w-2xl px-4 py-3 rounded-lg shadow-sm transition-colors overflow-hidden ${bubbleStyles}`}
       >
         {isUser && attachmentName && (
             <div className="mb-2 overflow-hidden rounded-md border border-white/20 bg-white/10">
@@ -134,24 +134,22 @@ export const MessageBubble: React.FC<MessageBubbleProps> = (props) => {
                 <span className="text-sm opacity-60">Thinking...</span>
             </div>
         )}
-        <div className={`flex flex-col gap-4 ${!isUser && imageUrl ? 'md:flex-row-reverse md:items-start' : ''}`}>
+        <div className={`flex flex-col gap-4 ${!isUser && imageUrl ? 'sm:flex-row-reverse sm:items-start' : ''}`}>
             {!isUser && imageUrl && (
-                <div className="w-full md:w-[40%] flex-shrink-0 animate-slide-in-up">
+                <div className="w-full sm:w-[38%] flex-shrink-0 animate-slide-in-up overflow-hidden">
                     <img 
                         src={imageUrl} 
                         alt="Visual Aid" 
-                        className="rounded-xl shadow-lg border border-[var(--border-color)] hover:scale-[1.02] transition-transform duration-300 w-full" 
+                        className="rounded-xl shadow-lg border border-[var(--border-color)] hover:scale-[1.02] transition-transform duration-300 w-full max-h-64 object-cover" 
                         referrerPolicy="no-referrer"
                         crossOrigin="anonymous"
                         onError={(e) => {
                             const img = e.currentTarget;
-                            // If already tried fallback, hide the image
                             if (img.dataset.fallback === '1') {
                                 img.style.display = 'none';
                                 return;
                             }
                             img.dataset.fallback = '1';
-                            // Try Pollinations as fallback
                             const altText = img.alt || 'educational illustration';
                             img.src = `https://image.pollinations.ai/prompt/${encodeURIComponent(altText)}?width=512&height=512&nologo=true`;
                         }}

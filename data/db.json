@@ -11,8 +11,8 @@
         "custom_instructions_about_user": "",
         "custom_instructions_how_to_respond": "",
         "notifications_enabled": false,
-        "total_points": 485,
-        "skill_vocabulary": 148,
+        "total_points": 495,
+        "skill_vocabulary": 154,
         "skill_grammar": 0,
         "skill_spelling": 0,
         "skill_phonetics": 0,
@@ -7907,6 +7907,353 @@
             "attachment_name": null,
             "attachment_type": null,
             "is_loading": false
+          },
+          {
+            "message_id": "1776720172340",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "wht si cow?",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776720172341",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I can help you with that. 🐮\n\nA **cow** is a large farm animal. \n\nHere are a few simple things about cows:\n*   **What they do:** They eat grass and give us milk.\n*   **What they sound like:** They say **\"Moo!\"**\n*   **Where they live:** They usually live on a farm in a field.\n\nYou are doing a great job learning! Do you have any more questions?",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776720404187",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "user",
+            "content": "who created u ?",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          },
+          {
+            "message_id": "1776720404188",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "I was created by **Ojasvin Anand**! I am here to help you learn and make things easier for you. 🌟",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720038962",
+      {
+        "session_id": "chat-1776720038962",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720038962,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720039145",
+      {
+        "session_id": "chat-1776720039145",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720039145,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720156930",
+      {
+        "session_id": "chat-1776720156930",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720156930,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720157261",
+      {
+        "session_id": "chat-1776720157261",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720157262,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720448709",
+      {
+        "session_id": "chat-1776720448709",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720448709,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720448963",
+      {
+        "session_id": "chat-1776720448963",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720448963,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720466099",
+      {
+        "session_id": "chat-1776720466099",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720466099,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720466132",
+      {
+        "session_id": "chat-1776720466132",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720466132,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720477024",
+      {
+        "session_id": "chat-1776720477024",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720477024,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720477073",
+      {
+        "session_id": "chat-1776720477073",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720477073,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720528736",
+      {
+        "session_id": "chat-1776720528736",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720528736,
+        "messages": []
+      }
+    ],
+    [
+      "chat-1776720530354",
+      {
+        "session_id": "chat-1776720530354",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720530354,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776720530423",
+      {
+        "session_id": "chat-1776720530423",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776720530423,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
           }
         ]
       }
@@ -7918,9 +8265,9 @@
       [
         {
           "date_str": "2026-04-20",
-          "points_earned": 445,
+          "points_earned": 455,
           "games_played": 0,
-          "minutes_played": 59
+          "minutes_played": 61
         },
         {
           "date_str": "2026-04-18",

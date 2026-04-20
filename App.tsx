@@ -1597,10 +1597,53 @@ Follow these rules:
         try {
           setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: '', isLoading: true } : m));
           const orResponse = await sendViaOpenRouter(
-            `You are a friendly AI Learning Assistant for students with dyslexia, created by Ojasvin Anand. Keep responses simple, clear and encouraging.`,
+            `You are a friendly and patient AI Learning Assistant for students with dyslexia, created by Ojasvin Anand.
+
+RESPONSE FORMAT — ALWAYS FOLLOW THIS EXACTLY:
+
+1. Start with a warm opener like "That's a great question! It looks like you're asking about [topic]."
+2. Give a short simple explanation in 1-3 sentences (like talking to a 10-year-old).
+3. List 3-5 bold key points in this format:
+**Key point title:** Short explanation.
+4. End with one encouraging closing sentence.
+5. Add a Visual Aid tag at the very end: Visual Aid: [topic name]
+6. Add source links at the very end in this EXACT format (replace TOPIC with the actual topic using + for spaces):
+[SOURCES::Google Images::https://www.google.com/search?q=TOPIC&tbm=isch::🔍||YouTube::https://www.youtube.com/results?search_query=TOPIC::📺||Britannica::https://www.britannica.com/search?query=TOPIC::📖||Wikimedia::https://commons.wikimedia.org/w/index.php?search=TOPIC::🖼️]
+
+Example for "cow":
+[SOURCES::Google Images::https://www.google.com/search?q=cow&tbm=isch::🔍||YouTube::https://www.youtube.com/results?search_query=cow::📺||Britannica::https://www.britannica.com/search?query=cow::📖||Wikimedia::https://commons.wikimedia.org/w/index.php?search=cow::🖼️]
+
+Always be encouraging and positive. Keep language simple and clear.`,
             userInput
           );
-          setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: orResponse, isLoading: false } : m));
+
+          // Process Visual Aid tag from OpenRouter response (same as Gemini pipeline)
+          const orImageMatch = orResponse.match(/IMAGE_PROMPT::\s*(.*)/i) ||
+                               orResponse.match(/Visual Aid:\s*\[(.*?)\]/i);
+          if (orImageMatch) {
+            const fullMatchText = orImageMatch[0];
+            const imagePrompt = orImageMatch[1].split('\n')[0].replace(/[\[\]`]/g, '').trim();
+            const textPart = orResponse.split(fullMatchText)[0].trim();
+            const externalLinks = getExternalImageLinks(imagePrompt, userInput);
+            try {
+              const { findEducationalAsset } = await import('./educationalLibrary');
+              const localAssetPath = findEducationalAsset(userInput) || findEducationalAsset(imagePrompt);
+              if (localAssetPath) {
+                setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, imageUrl: localAssetPath, content: textPart + externalLinks, isLoading: false } : m));
+              } else {
+                const realImageUrl = await fetchRealImage(imagePrompt);
+                if (realImageUrl) {
+                  setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, imageUrl: realImageUrl, content: textPart + externalLinks, isLoading: false } : m));
+                } else {
+                  setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: textPart + externalLinks, isLoading: false } : m));
+                }
+              }
+            } catch {
+              setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: orResponse, isLoading: false } : m));
+            }
+          } else {
+            setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: orResponse, isLoading: false } : m));
+          }
           setIsLoading(false);
           return;
         } catch (orErr) {
