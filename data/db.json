@@ -4,8 +4,8 @@
       "f23c69ef-d323-44d5-aa18-17cf35c8b195",
       {
         "userId": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
-        "theme": "pixel",
-        "background_style": "pixelart",
+        "theme": "light",
+        "background_style": "none",
         "language": "en",
         "voice_uri": "Microsoft Rosa Online (Natural) - English (Philippines)",
         "custom_instructions_about_user": "",
@@ -16411,7 +16411,7 @@
           "date_str": "2026-04-21",
           "points_earned": 235,
           "games_played": 26,
-          "minutes_played": 102
+          "minutes_played": 110
         },
         {
           "date_str": "2026-04-20",
