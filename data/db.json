@@ -4,8 +4,8 @@
       "f23c69ef-d323-44d5-aa18-17cf35c8b195",
       {
         "userId": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
-        "theme": "light",
-        "background_style": "none",
+        "theme": "cream",
+        "background_style": "gradient",
         "language": "en",
         "voice_uri": "Microsoft Rosa Online (Natural) - English (Philippines)",
         "custom_instructions_about_user": "",
@@ -339,6 +339,39 @@
         "userId": "a8cc7f49-9d18-49ee-b65e-0550e91dd889",
         "theme": "light",
         "background_style": "none",
+        "language": "en",
+        "voice_uri": null,
+        "custom_instructions_about_user": "",
+        "custom_instructions_how_to_respond": "",
+        "notifications_enabled": false,
+        "total_points": 0,
+        "skill_vocabulary": 0,
+        "skill_grammar": 0,
+        "skill_spelling": 0,
+        "skill_phonetics": 0,
+        "skill_creativity": 0,
+        "skill_logic": 0,
+        "skill_math": 0,
+        "enable_image_generation": true,
+        "enable_daily_time_limit": false,
+        "selected_image_provider": "gemini",
+        "selected_image_model": "models/gemini-2.0-flash-exp",
+        "dyslexia_enabled": false,
+        "dyslexia_ruler_enabled": false,
+        "dyslexia_hover_speech_enabled": false,
+        "dyslexia_font_size": 1,
+        "dyslexia_line_spacing": 1.5,
+        "dyslexia_letter_spacing": 0,
+        "dyslexia_word_spacing": 0,
+        "dyslexia_speech_rate": 1
+      }
+    ],
+    [
+      "798a106d-3c24-460e-9164-93dfdaee6076",
+      {
+        "userId": "798a106d-3c24-460e-9164-93dfdaee6076",
+        "theme": "cream",
+        "background_style": "pixelart",
         "language": "en",
         "voice_uri": null,
         "custom_instructions_about_user": "",
@@ -16401,6 +16434,102 @@
           }
         ]
       }
+    ],
+    [
+      "chat-1776807048481",
+      {
+        "session_id": "chat-1776807048481",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776807048481,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776807048742",
+      {
+        "session_id": "chat-1776807048742",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776807048742,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776807494948",
+      {
+        "session_id": "chat-1776807494948",
+        "user_id": "798a106d-3c24-460e-9164-93dfdaee6076",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776807494948,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "798a106d-3c24-460e-9164-93dfdaee6076",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776807494955",
+      {
+        "session_id": "chat-1776807494955",
+        "user_id": "798a106d-3c24-460e-9164-93dfdaee6076",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776807494955,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "798a106d-3c24-460e-9164-93dfdaee6076",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
     ]
   ],
   "progress": [
@@ -16411,7 +16540,7 @@
           "date_str": "2026-04-21",
           "points_earned": 235,
           "games_played": 26,
-          "minutes_played": 110
+          "minutes_played": 114
         },
         {
           "date_str": "2026-04-20",

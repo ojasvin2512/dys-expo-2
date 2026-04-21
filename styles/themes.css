@@ -45,258 +45,6 @@
   --scrollbar-track: #2d1b4e;
   --scrollbar-thumb: #00ffff;
   --scrollbar-thumb-hover: #ff00ff;
-  
-  /* Bold Text Colors */
-  --bold-color-1: #00ffff;
-  --bold-color-2: #ff00ff;
-  --bold-color-3: #ffff00;
-  --bold-color-4: #00ff88;
-  --bold-color-5: #ffaa00;
-  --bold-color-6: #ff0080;
-}
-
-/* Other Themes - Bold Text Colors */
-.light {
-  --bold-color-1: #0066cc;
-  --bold-color-2: #cc0066;
-  --bold-color-3: #cc6600;
-  --bold-color-4: #009966;
-  --bold-color-5: #9900cc;
-  --bold-color-6: #cc3300;
-}
-
-.dark {
-  --bold-color-1: #4da6ff;
-  --bold-color-2: #ff4da6;
-  --bold-color-3: #ffd24d;
-  --bold-color-4: #4dff99;
-  --bold-color-5: #d24dff;
-  --bold-color-6: #ff4d4d;
-}
-
-.sepia {
-  --bold-color-1: #8b4513;
-  --bold-color-2: #a0522d;
-  --bold-color-3: #cd853f;
-  --bold-color-4: #d2691e;
-  --bold-color-5: #8b6914;
-  --bold-color-6: #a0826d;
-}
-
-.ocean {
-  --bold-color-1: #00bcd4;
-  --bold-color-2: #0097a7;
-  --bold-color-3: #26c6da;
-  --bold-color-4: #00acc1;
-  --bold-color-5: #0288d1;
-  --bold-color-6: #039be5;
-}
-
-.forest {
-  --bold-color-1: #4caf50;
-  --bold-color-2: #66bb6a;
-  --bold-color-3: #81c784;
-  --bold-color-4: #388e3c;
-  --bold-color-5: #43a047;
-  --bold-color-6: #2e7d32;
-}
-
-.sunset {
-  --bold-color-1: #ff6b6b;
-  --bold-color-2: #ff8e53;
-  --bold-color-3: #ffd93d;
-  --bold-color-4: #ff9ff3;
-  --bold-color-5: #ff6b9d;
-  --bold-color-6: #ffa07a;
-}
-
-.lavender {
-  --bold-color-1: #9c27b0;
-  --bold-color-2: #ab47bc;
-  --bold-color-3: #ba68c8;
-  --bold-color-4: #ce93d8;
-  --bold-color-5: #8e24aa;
-  --bold-color-6: #7b1fa2;
-}
-
-.midnight {
-  --bold-color-1: #5c6bc0;
-  --bold-color-2: #7e57c2;
-  --bold-color-3: #9575cd;
-  --bold-color-4: #64b5f6;
-  --bold-color-5: #4fc3f7;
-  --bold-color-6: #4dd0e1;
-}
-
-.cream {
-  --bold-color-1: #d4a574;
-  --bold-color-2: #c9a581;
-  --bold-color-3: #b8956a;
-  --bold-color-4: #a67c52;
-  --bold-color-5: #8b6f47;
-  --bold-color-6: #9d7a54;
-}
-
-/* Halloween Theme - Spooky & Fun */
-.halloween {
-  /* Background Colors */
-  --bg-primary: #1a0a2e;
-  --bg-secondary: #2d1b3d;
-  --bg-tertiary: #3d2a4d;
-  --bg-hover: rgba(255, 87, 34, 0.2);
-  --bg-active: rgba(255, 87, 34, 0.3);
-  
-  /* Text Colors */
-  --text-primary: #ffffff;
-  --text-secondary: #ffb74d;
-  --text-tertiary: #ff9800;
-  --text-muted: #b39ddb;
-  
-  /* Accent Colors */
-  --accent-primary: #ff5722;
-  --accent-secondary: #ff9800;
-  --accent-tertiary: #9c27b0;
-  --accent-success: #66bb6a;
-  --accent-warning: #ffa726;
-  --accent-error: #ef5350;
-  
-  /* Border Colors */
-  --border-primary: #ff5722;
-  --border-secondary: #ff9800;
-  --border-tertiary: rgba(255, 87, 34, 0.3);
-  
-  /* Shadow Colors */
-  --shadow-glow-orange: 0 0 20px rgba(255, 87, 34, 0.6);
-  --shadow-glow-purple: 0 0 20px rgba(156, 39, 176, 0.6);
-  
-  /* Component Specific */
-  --card-bg: rgba(26, 10, 46, 0.85);
-  --card-border: #ff5722;
-  --button-bg: linear-gradient(135deg, #ff5722 0%, #ff9800 100%);
-  --button-border: #ff5722;
-  --input-bg: rgba(45, 27, 61, 0.6);
-  --input-border: #ff9800;
-  
-  /* Scrollbar */
-  --scrollbar-track: #1a0a2e;
-  --scrollbar-thumb: #ff5722;
-  --scrollbar-thumb-hover: #ff9800;
-  
-  /* Bold Text Colors */
-  --bold-color-1: #ff5722;
-  --bold-color-2: #ff9800;
-  --bold-color-3: #9c27b0;
-  --bold-color-4: #ba68c8;
-  --bold-color-5: #ffb74d;
-  --bold-color-6: #ce93d8;
-}
-
-/* Tokyo Theme - Neon Cyberpunk */
-.tokyo {
-  /* Background Colors */
-  --bg-primary: #0a0e27;
-  --bg-secondary: #1a1f3a;
-  --bg-tertiary: #2a2f4a;
-  --bg-hover: rgba(255, 20, 147, 0.2);
-  --bg-active: rgba(255, 20, 147, 0.3);
-  
-  /* Text Colors */
-  --text-primary: #ffffff;
-  --text-secondary: #ff1493;
-  --text-tertiary: #00d4ff;
-  --text-muted: #8892b0;
-  
-  /* Accent Colors */
-  --accent-primary: #ff1493;
-  --accent-secondary: #00d4ff;
-  --accent-tertiary: #ffff00;
-  --accent-success: #00ff88;
-  --accent-warning: #ff6b00;
-  --accent-error: #ff0055;
-  
-  /* Border Colors */
-  --border-primary: #ff1493;
-  --border-secondary: #00d4ff;
-  --border-tertiary: rgba(255, 20, 147, 0.3);
-  
-  /* Shadow Colors */
-  --shadow-glow-pink: 0 0 20px rgba(255, 20, 147, 0.6);
-  --shadow-glow-cyan: 0 0 20px rgba(0, 212, 255, 0.6);
-  
-  /* Component Specific */
-  --card-bg: rgba(10, 14, 39, 0.85);
-  --card-border: #ff1493;
-  --button-bg: linear-gradient(135deg, #ff1493 0%, #00d4ff 100%);
-  --button-border: #ff1493;
-  --input-bg: rgba(26, 31, 58, 0.6);
-  --input-border: #00d4ff;
-  
-  /* Scrollbar */
-  --scrollbar-track: #0a0e27;
-  --scrollbar-thumb: #ff1493;
-  --scrollbar-thumb-hover: #00d4ff;
-  
-  /* Bold Text Colors */
-  --bold-color-1: #ff1493;
-  --bold-color-2: #00d4ff;
-  --bold-color-3: #ffff00;
-  --bold-color-4: #00ff88;
-  --bold-color-5: #ff6b00;
-  --bold-color-6: #b026ff;
-}
-
-/* Pokemon Theme - Colorful & Playful */
-.pokemon {
-  /* Background Colors */
-  --bg-primary: #ffcb05;
-  --bg-secondary: #3d7dca;
-  --bg-tertiary: #ff0000;
-  --bg-hover: rgba(255, 203, 5, 0.2);
-  --bg-active: rgba(255, 203, 5, 0.3);
-  
-  /* Text Colors */
-  --text-primary: #2a2a2a;
-  --text-secondary: #3d7dca;
-  --text-tertiary: #ff0000;
-  --text-muted: #666666;
-  
-  /* Accent Colors */
-  --accent-primary: #ff0000;
-  --accent-secondary: #3d7dca;
-  --accent-tertiary: #ffcb05;
-  --accent-success: #78c850;
-  --accent-warning: #f08030;
-  --accent-error: #ee8130;
-  
-  /* Border Colors */
-  --border-primary: #2a2a2a;
-  --border-secondary: #3d7dca;
-  --border-tertiary: rgba(42, 42, 42, 0.3);
-  
-  /* Shadow Colors */
-  --shadow-glow-red: 0 0 20px rgba(255, 0, 0, 0.4);
-  --shadow-glow-blue: 0 0 20px rgba(61, 125, 202, 0.4);
-  
-  /* Component Specific */
-  --card-bg: rgba(255, 255, 255, 0.95);
-  --card-border: #2a2a2a;
-  --button-bg: linear-gradient(135deg, #ff0000 0%, #ffcb05 50%, #3d7dca 100%);
-  --button-border: #2a2a2a;
-  --input-bg: rgba(255, 255, 255, 0.8);
-  --input-border: #3d7dca;
-  
-  /* Scrollbar */
-  --scrollbar-track: #ffcb05;
-  --scrollbar-thumb: #ff0000;
-  --scrollbar-thumb-hover: #3d7dca;
-  
-  /* Bold Text Colors */
-  --bold-color-1: #ff0000;
-  --bold-color-2: #3d7dca;
-  --bold-color-3: #ffcb05;
-  --bold-color-4: #78c850;
-  --bold-color-5: #f08030;
-  --bold-color-6: #a040a0;
 }
 
 /* Pixel Art Background Style */
@@ -370,200 +118,6 @@
   }
 }
 
-/* Spooky Background Style - Halloween */
-.bg-spooky {
-  position: relative;
-  background: linear-gradient(180deg, #1a0a2e 0%, #2d1b3d 50%, #1a0a2e 100%);
-}
-
-.bg-spooky::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    /* Bats */
-    radial-gradient(3px 2px at 20% 30%, rgba(255, 87, 34, 0.8), transparent),
-    radial-gradient(3px 2px at 60% 20%, rgba(255, 152, 0, 0.7), transparent),
-    radial-gradient(3px 2px at 80% 40%, rgba(156, 39, 176, 0.7), transparent),
-    radial-gradient(3px 2px at 15% 60%, rgba(255, 87, 34, 0.6), transparent),
-    radial-gradient(3px 2px at 90% 70%, rgba(255, 152, 0, 0.8), transparent),
-    /* Stars */
-    radial-gradient(2px 2px at 40% 15%, rgba(255, 255, 255, 0.6), transparent),
-    radial-gradient(1px 1px at 70% 25%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(2px 2px at 25% 80%, rgba(255, 255, 255, 0.6), transparent);
-  animation: spookyFloat 8s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.bg-spooky::after {
-  content: '🎃';
-  position: absolute;
-  font-size: 3rem;
-  bottom: 20px;
-  left: 5%;
-  animation: pumpkinBounce 3s ease-in-out infinite;
-  opacity: 0.3;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@keyframes spookyFloat {
-  0%, 100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 0.7;
-    transform: translateY(-20px);
-  }
-}
-
-@keyframes pumpkinBounce {
-  0%, 100% {
-    transform: translateY(0) rotate(-5deg);
-  }
-  50% {
-    transform: translateY(-15px) rotate(5deg);
-  }
-}
-
-/* Neon City Background Style - Tokyo */
-.bg-neon {
-  position: relative;
-  background: linear-gradient(180deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
-}
-
-.bg-neon::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    /* Neon lights */
-    linear-gradient(90deg, transparent 0%, rgba(255, 20, 147, 0.1) 10%, transparent 20%),
-    linear-gradient(90deg, transparent 30%, rgba(0, 212, 255, 0.1) 40%, transparent 50%),
-    linear-gradient(90deg, transparent 60%, rgba(255, 255, 0, 0.1) 70%, transparent 80%),
-    /* Stars */
-    radial-gradient(2px 2px at 25% 20%, rgba(255, 20, 147, 0.8), transparent),
-    radial-gradient(2px 2px at 75% 30%, rgba(0, 212, 255, 0.8), transparent),
-    radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 0, 0.7), transparent),
-    radial-gradient(2px 2px at 85% 60%, rgba(255, 20, 147, 0.6), transparent),
-    radial-gradient(1px 1px at 15% 70%, rgba(0, 212, 255, 0.7), transparent);
-  animation: neonPulse 4s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.bg-neon::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 200%;
-  height: 40%;
-  background: 
-    /* Neon city skyline */
-    linear-gradient(90deg, transparent 0%, transparent 5%, rgba(255, 20, 147, 0.2) 5%, rgba(255, 20, 147, 0.2) 10%, transparent 10%),
-    linear-gradient(90deg, transparent 15%, transparent 18%, rgba(0, 212, 255, 0.3) 18%, rgba(0, 212, 255, 0.3) 25%, transparent 25%),
-    linear-gradient(90deg, transparent 30%, transparent 32%, rgba(255, 255, 0, 0.2) 32%, rgba(255, 255, 0, 0.2) 38%, transparent 38%),
-    linear-gradient(90deg, transparent 45%, transparent 48%, rgba(255, 20, 147, 0.3) 48%, rgba(255, 20, 147, 0.3) 52%, transparent 52%),
-    linear-gradient(90deg, transparent 60%, transparent 63%, rgba(0, 212, 255, 0.2) 63%, rgba(0, 212, 255, 0.2) 70%, transparent 70%),
-    linear-gradient(90deg, transparent 75%, transparent 77%, rgba(255, 255, 0, 0.3) 77%, rgba(255, 255, 0, 0.3) 85%, transparent 85%);
-  background-size: 100% 100%;
-  animation: scrollNeonCity 25s linear infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@keyframes neonPulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-@keyframes scrollNeonCity {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* Pokeball Background Style - Pokemon */
-.bg-pokeball {
-  position: relative;
-  background: linear-gradient(180deg, #3d7dca 0%, #ffcb05 50%, #ff0000 100%);
-}
-
-.bg-pokeball::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    /* Pokeball pattern */
-    radial-gradient(circle 30px at 20% 20%, rgba(255, 255, 255, 0.3), transparent),
-    radial-gradient(circle 25px at 80% 30%, rgba(255, 0, 0, 0.2), transparent),
-    radial-gradient(circle 35px at 50% 60%, rgba(255, 255, 255, 0.25), transparent),
-    radial-gradient(circle 20px at 15% 80%, rgba(61, 125, 202, 0.3), transparent),
-    radial-gradient(circle 28px at 85% 75%, rgba(255, 203, 5, 0.25), transparent),
-    /* Stars/sparkles */
-    radial-gradient(3px 3px at 30% 15%, rgba(255, 255, 255, 0.9), transparent),
-    radial-gradient(2px 2px at 70% 25%, rgba(255, 255, 255, 0.8), transparent),
-    radial-gradient(3px 3px at 45% 70%, rgba(255, 255, 255, 0.9), transparent),
-    radial-gradient(2px 2px at 90% 50%, rgba(255, 255, 255, 0.7), transparent);
-  animation: pokeballFloat 6s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.bg-pokeball::after {
-  content: '⚡';
-  position: absolute;
-  font-size: 4rem;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: pikachuSpark 2s ease-in-out infinite;
-  opacity: 0.15;
-  pointer-events: none;
-  z-index: 0;
-}
-
-@keyframes pokeballFloat {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
-}
-
-@keyframes pikachuSpark {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1) rotate(0deg);
-    opacity: 0.15;
-  }
-  50% {
-    transform: translate(-50%, -50%) scale(1.2) rotate(180deg);
-    opacity: 0.25;
-  }
-}
-
 /* Pixel Theme Component Styles */
 .pixel .chat-input-container {
   background: var(--card-bg);
@@ -601,92 +155,6 @@
     0 0 40px rgba(255, 0, 255, 0.5);
 }
 
-/* Bold Text Styling - Alternating Neon Colors */
-.pixel strong,
-.pixel b {
-  font-weight: 900;
-  color: var(--accent-primary);
-  text-shadow: 
-    0 0 8px rgba(0, 255, 255, 0.8),
-    0 0 12px rgba(0, 255, 255, 0.5);
-  padding: 0 2px;
-  position: relative;
-  display: inline-block;
-  animation: boldGlow 3s ease-in-out infinite;
-}
-
-/* Alternating colors for consecutive bold elements */
-.pixel strong:nth-of-type(2n),
-.pixel b:nth-of-type(2n) {
-  color: var(--accent-secondary);
-  text-shadow: 
-    0 0 8px rgba(255, 0, 255, 0.8),
-    0 0 12px rgba(255, 0, 255, 0.5);
-}
-
-.pixel strong:nth-of-type(3n),
-.pixel b:nth-of-type(3n) {
-  color: var(--accent-tertiary);
-  text-shadow: 
-    0 0 8px rgba(255, 255, 0, 0.8),
-    0 0 12px rgba(255, 255, 0, 0.5);
-}
-
-.pixel strong:nth-of-type(4n),
-.pixel b:nth-of-type(4n) {
-  color: var(--accent-success);
-  text-shadow: 
-    0 0 8px rgba(0, 255, 136, 0.8),
-    0 0 12px rgba(0, 255, 136, 0.5);
-}
-
-.pixel strong:nth-of-type(5n),
-.pixel b:nth-of-type(5n) {
-  color: var(--accent-warning);
-  text-shadow: 
-    0 0 8px rgba(255, 170, 0, 0.8),
-    0 0 12px rgba(255, 170, 0, 0.5);
-}
-
-.pixel strong:nth-of-type(6n),
-.pixel b:nth-of-type(6n) {
-  color: var(--accent-error);
-  text-shadow: 
-    0 0 8px rgba(255, 0, 128, 0.8),
-    0 0 12px rgba(255, 0, 128, 0.5);
-}
-
-@keyframes boldGlow {
-  0%, 100% {
-    filter: brightness(1);
-  }
-  50% {
-    filter: brightness(1.3);
-  }
-}
-
-/* Bold text in message bubbles */
-.pixel .message-bubble strong,
-.pixel .message-bubble b {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 2px 6px;
-  border-radius: 4px;
-  border: 1px solid currentColor;
-  box-shadow: 0 0 10px currentColor;
-}
-
-/* Bold text in headings gets extra emphasis */
-.pixel h1 strong,
-.pixel h1 b,
-.pixel h2 strong,
-.pixel h2 b,
-.pixel h3 strong,
-.pixel h3 b {
-  font-size: 1.1em;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
 .pixel .message-bubble {
   background: var(--card-bg);
   border: 2px solid var(--border-tertiary);
@@ -701,6 +169,177 @@
 .pixel .message-bubble.assistant {
   border-color: var(--accent-secondary);
   box-shadow: var(--shadow-glow-magenta);
+}
+
+/* Special Bold Text Styling for Chat Messages */
+.pixel .message-bubble strong,
+.pixel .message-bubble b,
+.pixel .prose strong,
+.pixel .prose b {
+  color: var(--accent-tertiary);
+  font-weight: 900;
+  text-shadow: 
+    0 0 8px rgba(255, 255, 0, 0.9),
+    0 0 15px rgba(255, 255, 0, 0.6),
+    0 0 20px rgba(255, 255, 0, 0.3);
+  background: linear-gradient(135deg, rgba(255, 255, 0, 0.1), rgba(255, 170, 0, 0.1));
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 0, 0.3);
+  box-shadow: 
+    0 0 10px rgba(255, 255, 0, 0.4),
+    inset 0 0 5px rgba(255, 255, 0, 0.1);
+  position: relative;
+  display: inline-block;
+  margin: 0 2px;
+  animation: boldTextGlow 3s ease-in-out infinite;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* Animated glow effect for bold text */
+@keyframes boldTextGlow {
+  0%, 100% {
+    text-shadow: 
+      0 0 8px rgba(255, 255, 0, 0.9),
+      0 0 15px rgba(255, 255, 0, 0.6),
+      0 0 20px rgba(255, 255, 0, 0.3);
+    box-shadow: 
+      0 0 10px rgba(255, 255, 0, 0.4),
+      inset 0 0 5px rgba(255, 255, 0, 0.1);
+  }
+  50% {
+    text-shadow: 
+      0 0 12px rgba(255, 255, 0, 1),
+      0 0 20px rgba(255, 255, 0, 0.8),
+      0 0 30px rgba(255, 255, 0, 0.5);
+    box-shadow: 
+      0 0 15px rgba(255, 255, 0, 0.6),
+      inset 0 0 8px rgba(255, 255, 0, 0.2);
+  }
+}
+
+/* Special styling for bold text in user messages */
+.pixel .message-bubble.user strong,
+.pixel .message-bubble.user b {
+  color: var(--accent-primary);
+  text-shadow: 
+    0 0 8px rgba(0, 255, 255, 0.9),
+    0 0 15px rgba(0, 255, 255, 0.6),
+    0 0 20px rgba(0, 255, 255, 0.3);
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(0, 200, 255, 0.1));
+  border-color: rgba(0, 255, 255, 0.3);
+  box-shadow: 
+    0 0 10px rgba(0, 255, 255, 0.4),
+    inset 0 0 5px rgba(0, 255, 255, 0.1);
+  animation: boldTextGlowCyan 3s ease-in-out infinite;
+}
+
+@keyframes boldTextGlowCyan {
+  0%, 100% {
+    text-shadow: 
+      0 0 8px rgba(0, 255, 255, 0.9),
+      0 0 15px rgba(0, 255, 255, 0.6),
+      0 0 20px rgba(0, 255, 255, 0.3);
+    box-shadow: 
+      0 0 10px rgba(0, 255, 255, 0.4),
+      inset 0 0 5px rgba(0, 255, 255, 0.1);
+  }
+  50% {
+    text-shadow: 
+      0 0 12px rgba(0, 255, 255, 1),
+      0 0 20px rgba(0, 255, 255, 0.8),
+      0 0 30px rgba(0, 255, 255, 0.5);
+    box-shadow: 
+      0 0 15px rgba(0, 255, 255, 0.6),
+      inset 0 0 8px rgba(0, 255, 255, 0.2);
+  }
+}
+
+/* Special styling for bold text in assistant messages */
+.pixel .message-bubble.assistant strong,
+.pixel .message-bubble.assistant b {
+  color: var(--accent-secondary);
+  text-shadow: 
+    0 0 8px rgba(255, 0, 255, 0.9),
+    0 0 15px rgba(255, 0, 255, 0.6),
+    0 0 20px rgba(255, 0, 255, 0.3);
+  background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(255, 0, 200, 0.1));
+  border-color: rgba(255, 0, 255, 0.3);
+  box-shadow: 
+    0 0 10px rgba(255, 0, 255, 0.4),
+    inset 0 0 5px rgba(255, 0, 255, 0.1);
+  animation: boldTextGlowMagenta 3s ease-in-out infinite;
+}
+
+@keyframes boldTextGlowMagenta {
+  0%, 100% {
+    text-shadow: 
+      0 0 8px rgba(255, 0, 255, 0.9),
+      0 0 15px rgba(255, 0, 255, 0.6),
+      0 0 20px rgba(255, 0, 255, 0.3);
+    box-shadow: 
+      0 0 10px rgba(255, 0, 255, 0.4),
+      inset 0 0 5px rgba(255, 0, 255, 0.1);
+  }
+  50% {
+    text-shadow: 
+      0 0 12px rgba(255, 0, 255, 1),
+      0 0 20px rgba(255, 0, 255, 0.8),
+      0 0 30px rgba(255, 0, 255, 0.5);
+    box-shadow: 
+      0 0 15px rgba(255, 0, 255, 0.6),
+      inset 0 0 8px rgba(255, 0, 255, 0.2);
+  }
+}
+
+/* Bold text in headings within chat */
+.pixel .message-bubble h1 strong,
+.pixel .message-bubble h1 b,
+.pixel .message-bubble h2 strong,
+.pixel .message-bubble h2 b,
+.pixel .message-bubble h3 strong,
+.pixel .message-bubble h3 b {
+  font-size: 1.1em;
+  padding: 3px 8px;
+  border-radius: 8px;
+  margin: 0 3px;
+}
+
+/* Bold text in lists within chat */
+.pixel .message-bubble li strong,
+.pixel .message-bubble li b {
+  padding: 1px 4px;
+  border-radius: 4px;
+  margin: 0 1px;
+}
+
+/* Hover effect for bold text */
+.pixel .message-bubble strong:hover,
+.pixel .message-bubble b:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+  transition: all 0.2s ease;
+}
+
+/* Special styling for bold text in code blocks */
+.pixel .message-bubble code strong,
+.pixel .message-bubble code b,
+.pixel .message-bubble pre strong,
+.pixel .message-bubble pre b {
+  background: rgba(255, 255, 0, 0.2);
+  border: 1px solid rgba(255, 255, 0, 0.4);
+  color: var(--accent-tertiary);
+  font-family: 'Courier New', monospace;
+}
+
+/* Bold text in blockquotes */
+.pixel .message-bubble blockquote strong,
+.pixel .message-bubble blockquote b {
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+  border-left: 3px solid var(--accent-primary);
+  padding-left: 8px;
+  margin-left: 4px;
 }
 
 .pixel .sidebar {
@@ -930,643 +569,3 @@
   background: linear-gradient(90deg, transparent, var(--accent-primary), var(--accent-secondary), transparent);
   box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
-
-/* ============================================ */
-/* UNIVERSAL BOLD TEXT STYLING FOR ALL THEMES */
-/* ============================================ */
-
-/* Base bold text styling - applies to all themes */
-strong,
-b {
-  font-weight: 900;
-  position: relative;
-  display: inline;
-  padding: 0 2px;
-}
-
-/* Theme-specific bold text colors with glow effects */
-
-/* Pixel Theme Bold Text */
-.pixel strong:nth-of-type(1),
-.pixel b:nth-of-type(1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 8px currentColor;
-}
-
-.pixel strong:nth-of-type(2),
-.pixel b:nth-of-type(2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 8px currentColor;
-}
-
-.pixel strong:nth-of-type(3),
-.pixel b:nth-of-type(3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 8px currentColor;
-}
-
-.pixel strong:nth-of-type(4),
-.pixel b:nth-of-type(4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 8px currentColor;
-}
-
-.pixel strong:nth-of-type(5),
-.pixel b:nth-of-type(5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 8px currentColor;
-}
-
-.pixel strong:nth-of-type(6),
-.pixel b:nth-of-type(6) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 8px currentColor;
-}
-
-/* Repeat pattern for more bold elements */
-.pixel strong:nth-of-type(n+7),
-.pixel b:nth-of-type(n+7) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 8px currentColor;
-}
-
-/* Other Themes Bold Text - Light Theme */
-.light strong,
-.light b {
-  font-weight: 900;
-}
-
-.light strong:nth-of-type(6n+1),
-.light b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-}
-
-.light strong:nth-of-type(6n+2),
-.light b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-}
-
-.light strong:nth-of-type(6n+3),
-.light b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-}
-
-.light strong:nth-of-type(6n+4),
-.light b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-}
-
-.light strong:nth-of-type(6n+5),
-.light b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-}
-
-.light strong:nth-of-type(6n),
-.light b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-}
-
-/* Dark Theme Bold Text */
-.dark strong:nth-of-type(6n+1),
-.dark b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 5px currentColor;
-}
-
-.dark strong:nth-of-type(6n+2),
-.dark b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 5px currentColor;
-}
-
-.dark strong:nth-of-type(6n+3),
-.dark b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 5px currentColor;
-}
-
-.dark strong:nth-of-type(6n+4),
-.dark b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 5px currentColor;
-}
-
-.dark strong:nth-of-type(6n+5),
-.dark b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 5px currentColor;
-}
-
-.dark strong:nth-of-type(6n),
-.dark b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 5px currentColor;
-}
-
-/* Sepia Theme Bold Text */
-.sepia strong:nth-of-type(6n+1),
-.sepia b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-}
-
-.sepia strong:nth-of-type(6n+2),
-.sepia b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-}
-
-.sepia strong:nth-of-type(6n+3),
-.sepia b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-}
-
-.sepia strong:nth-of-type(6n+4),
-.sepia b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-}
-
-.sepia strong:nth-of-type(6n+5),
-.sepia b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-}
-
-.sepia strong:nth-of-type(6n),
-.sepia b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-}
-
-/* Ocean Theme Bold Text */
-.ocean strong:nth-of-type(6n+1),
-.ocean b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 4px rgba(0, 188, 212, 0.3);
-}
-
-.ocean strong:nth-of-type(6n+2),
-.ocean b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 4px rgba(0, 151, 167, 0.3);
-}
-
-.ocean strong:nth-of-type(6n+3),
-.ocean b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 4px rgba(38, 198, 218, 0.3);
-}
-
-.ocean strong:nth-of-type(6n+4),
-.ocean b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 4px rgba(0, 172, 193, 0.3);
-}
-
-.ocean strong:nth-of-type(6n+5),
-.ocean b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 4px rgba(2, 136, 209, 0.3);
-}
-
-.ocean strong:nth-of-type(6n),
-.ocean b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 4px rgba(3, 155, 229, 0.3);
-}
-
-/* Forest Theme Bold Text */
-.forest strong:nth-of-type(6n+1),
-.forest b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 4px rgba(76, 175, 80, 0.3);
-}
-
-.forest strong:nth-of-type(6n+2),
-.forest b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 4px rgba(102, 187, 106, 0.3);
-}
-
-.forest strong:nth-of-type(6n+3),
-.forest b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 4px rgba(129, 199, 132, 0.3);
-}
-
-.forest strong:nth-of-type(6n+4),
-.forest b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 4px rgba(56, 142, 60, 0.3);
-}
-
-.forest strong:nth-of-type(6n+5),
-.forest b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 4px rgba(67, 160, 71, 0.3);
-}
-
-.forest strong:nth-of-type(6n),
-.forest b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 4px rgba(46, 125, 50, 0.3);
-}
-
-/* Sunset Theme Bold Text */
-.sunset strong:nth-of-type(6n+1),
-.sunset b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 6px rgba(255, 107, 107, 0.4);
-}
-
-.sunset strong:nth-of-type(6n+2),
-.sunset b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 6px rgba(255, 142, 83, 0.4);
-}
-
-.sunset strong:nth-of-type(6n+3),
-.sunset b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 6px rgba(255, 217, 61, 0.4);
-}
-
-.sunset strong:nth-of-type(6n+4),
-.sunset b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 6px rgba(255, 159, 243, 0.4);
-}
-
-.sunset strong:nth-of-type(6n+5),
-.sunset b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 6px rgba(255, 107, 157, 0.4);
-}
-
-.sunset strong:nth-of-type(6n),
-.sunset b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 6px rgba(255, 160, 122, 0.4);
-}
-
-/* Lavender Theme Bold Text */
-.lavender strong:nth-of-type(6n+1),
-.lavender b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 5px rgba(156, 39, 176, 0.3);
-}
-
-.lavender strong:nth-of-type(6n+2),
-.lavender b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 5px rgba(171, 71, 188, 0.3);
-}
-
-.lavender strong:nth-of-type(6n+3),
-.lavender b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 5px rgba(186, 104, 200, 0.3);
-}
-
-.lavender strong:nth-of-type(6n+4),
-.lavender b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 5px rgba(206, 147, 216, 0.3);
-}
-
-.lavender strong:nth-of-type(6n+5),
-.lavender b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 5px rgba(142, 36, 170, 0.3);
-}
-
-.lavender strong:nth-of-type(6n),
-.lavender b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 5px rgba(123, 31, 162, 0.3);
-}
-
-/* Midnight Theme Bold Text */
-.midnight strong:nth-of-type(6n+1),
-.midnight b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 6px rgba(92, 107, 192, 0.4);
-}
-
-.midnight strong:nth-of-type(6n+2),
-.midnight b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 6px rgba(126, 87, 194, 0.4);
-}
-
-.midnight strong:nth-of-type(6n+3),
-.midnight b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 6px rgba(149, 117, 205, 0.4);
-}
-
-.midnight strong:nth-of-type(6n+4),
-.midnight b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 6px rgba(100, 181, 246, 0.4);
-}
-
-.midnight strong:nth-of-type(6n+5),
-.midnight b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 6px rgba(79, 195, 247, 0.4);
-}
-
-.midnight strong:nth-of-type(6n),
-.midnight b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 6px rgba(77, 208, 225, 0.4);
-}
-
-/* Cream Theme Bold Text */
-.cream strong:nth-of-type(6n+1),
-.cream b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-}
-
-.cream strong:nth-of-type(6n+2),
-.cream b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-}
-
-.cream strong:nth-of-type(6n+3),
-.cream b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-}
-
-.cream strong:nth-of-type(6n+4),
-.cream b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-}
-
-.cream strong:nth-of-type(6n+5),
-.cream b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-}
-
-.cream strong:nth-of-type(6n),
-.cream b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-}
-
-/* Enhanced styling for bold text in message bubbles */
-.message-bubble strong,
-.message-bubble b,
-.prose strong,
-.prose b {
-  background: rgba(0, 0, 0, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin: 0 1px;
-}
-
-.pixel .message-bubble strong,
-.pixel .message-bubble b,
-.pixel .prose strong,
-.pixel .prose b {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid currentColor;
-  box-shadow: 0 0 8px currentColor;
-}
-
-/* Bold text in lists */
-li strong:first-child,
-li b:first-child {
-  display: inline-block;
-  margin-right: 4px;
-}
-
-/* Halloween Theme Bold Text */
-.halloween strong:nth-of-type(6n+1),
-.halloween b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 8px rgba(255, 87, 34, 0.6);
-}
-
-.halloween strong:nth-of-type(6n+2),
-.halloween b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 8px rgba(255, 152, 0, 0.6);
-}
-
-.halloween strong:nth-of-type(6n+3),
-.halloween b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 8px rgba(156, 39, 176, 0.6);
-}
-
-.halloween strong:nth-of-type(6n+4),
-.halloween b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 8px rgba(186, 104, 200, 0.5);
-}
-
-.halloween strong:nth-of-type(6n+5),
-.halloween b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 8px rgba(255, 183, 77, 0.6);
-}
-
-.halloween strong:nth-of-type(6n),
-.halloween b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 8px rgba(206, 147, 216, 0.5);
-}
-
-.halloween .message-bubble strong,
-.halloween .message-bubble b,
-.halloween .prose strong,
-.halloween .prose b {
-  background: rgba(255, 87, 34, 0.15);
-  border: 1px solid currentColor;
-  box-shadow: 0 0 10px currentColor;
-}
-
-/* Tokyo Theme Bold Text */
-.tokyo strong:nth-of-type(6n+1),
-.tokyo b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 10px rgba(255, 20, 147, 0.8);
-}
-
-.tokyo strong:nth-of-type(6n+2),
-.tokyo b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
-}
-
-.tokyo strong:nth-of-type(6n+3),
-.tokyo b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 10px rgba(255, 255, 0, 0.8);
-}
-
-.tokyo strong:nth-of-type(6n+4),
-.tokyo b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
-}
-
-.tokyo strong:nth-of-type(6n+5),
-.tokyo b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 10px rgba(255, 107, 0, 0.8);
-}
-
-.tokyo strong:nth-of-type(6n),
-.tokyo b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 10px rgba(176, 38, 255, 0.8);
-}
-
-.tokyo .message-bubble strong,
-.tokyo .message-bubble b,
-.tokyo .prose strong,
-.tokyo .prose b {
-  background: rgba(255, 20, 147, 0.2);
-  border: 1px solid currentColor;
-  box-shadow: 0 0 12px currentColor;
-}
-
-/* Pokemon Theme Bold Text */
-.pokemon strong:nth-of-type(6n+1),
-.pokemon b:nth-of-type(6n+1) {
-  color: var(--bold-color-1);
-  text-shadow: 0 0 6px rgba(255, 0, 0, 0.4);
-  font-weight: 900;
-}
-
-.pokemon strong:nth-of-type(6n+2),
-.pokemon b:nth-of-type(6n+2) {
-  color: var(--bold-color-2);
-  text-shadow: 0 0 6px rgba(61, 125, 202, 0.4);
-  font-weight: 900;
-}
-
-.pokemon strong:nth-of-type(6n+3),
-.pokemon b:nth-of-type(6n+3) {
-  color: var(--bold-color-3);
-  text-shadow: 0 0 6px rgba(255, 203, 5, 0.5);
-  font-weight: 900;
-}
-
-.pokemon strong:nth-of-type(6n+4),
-.pokemon b:nth-of-type(6n+4) {
-  color: var(--bold-color-4);
-  text-shadow: 0 0 6px rgba(120, 200, 80, 0.4);
-  font-weight: 900;
-}
-
-.pokemon strong:nth-of-type(6n+5),
-.pokemon b:nth-of-type(6n+5) {
-  color: var(--bold-color-5);
-  text-shadow: 0 0 6px rgba(240, 128, 48, 0.4);
-  font-weight: 900;
-}
-
-.pokemon strong:nth-of-type(6n),
-.pokemon b:nth-of-type(6n) {
-  color: var(--bold-color-6);
-  text-shadow: 0 0 6px rgba(160, 64, 160, 0.4);
-  font-weight: 900;
-}
-
-.pokemon .message-bubble strong,
-.pokemon .message-bubble b,
-.pokemon .prose strong,
-.pokemon .prose b {
-  background: rgba(255, 203, 5, 0.2);
-  border: 2px solid currentColor;
-  box-shadow: 0 0 8px currentColor;
-  padding: 3px 8px;
-  border-radius: 6px;
-}
-
-/* Theme-specific component styling */
-
-/* Halloween Theme Components */
-.halloween .chat-input-container {
-  background: var(--card-bg);
-  border: 2px solid var(--border-primary);
-  box-shadow: var(--shadow-glow-orange);
-}
-
-.halloween button {
-  background: var(--button-bg);
-  border: 2px solid var(--button-border);
-  box-shadow: var(--shadow-glow-orange);
-}
-
-.halloween .message-bubble {
-  background: var(--card-bg);
-  border: 2px solid var(--border-tertiary);
-}
-
-.halloween .message-bubble.user {
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-glow-orange);
-}
-
-.halloween .message-bubble.assistant {
-  border-color: var(--accent-tertiary);
-  box-shadow: var(--shadow-glow-purple);
-}
-
-/* Tokyo Theme Components */
-.tokyo .chat-input-container {
-  background: var(--card-bg);
-  border: 2px solid var(--border-primary);
-  box-shadow: var(--shadow-glow-pink);
-}
-
-.tokyo button {
-  background: var(--button-bg);
-  border: 2px solid var(--button-border);
-  box-shadow: var(--shadow-glow-pink);
-}
-
-.tokyo .message-bubble {
-  background: var(--card-bg);
-  border: 2px solid var(--border-tertiary);
-}
-
-.tokyo .message-bubble.user {
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-glow-pink);
-}
-
-.tokyo .message-bubble.assistant {
-  border-color: var(--accent-secondary);
-  box-shadow: var(--shadow-glow-cyan);
-}
-
-/* Pokemon Theme Components */
-.pokemon .chat-input-container {
-  background: var(--card-bg);
-  border: 3px solid var(--border-primary);
-  box-shadow: var(--shadow-glow-red);
-}
-
-.pokemon button {
-  background: var(--button-bg);
-  border: 3px solid var(--button-border);
-  box-shadow: var(--shadow-glow-red);
-  font-weight: 900;
-}
-
-.pokemon .message-bubble {
-  background: var(--card-bg);
-  border: 3px solid var(--border-primary);
-}
-
-.pokemon .message-bubble.user {
-  border-color: var(--accent-primary);
-  box-shadow: var(--shadow-glow-red);
-}
-
-.pokemon .message-bubble.assistant {
-  border-color: var(--accent-secondary);
-  box-shadow: var(--shadow-glow-blue);
-}
-
