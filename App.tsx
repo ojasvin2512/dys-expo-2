@@ -10,6 +10,7 @@ import { ReadingRuler } from './components/ReadingRuler';
 import { IntroPage } from './components/IntroPage';
 import './styles/IntroPage.css';
 import './styles/themes.css';
+import './styles/bold-text-enhanced.css';
 import type { Message, Theme, CustomInstructions, Language, FileAttachment, ChatSession, ChatMetadata, Challenge, UserData, BackgroundStyle, DyslexiaSettings, SkillStats, Achievement } from './types';
 import { createChat, generateImageForText, generateChatTitle, sendStreamWithFallback, fetchRealImage, isOpenRouterAvailable, sendViaOpenRouter, baseSystemInstruction } from './services/geminiService';
 import { IMAGE_PROMPT_PREFIX, IMAGE_SUGGESTION, UI_STRINGS, DAILY_GOAL, MESSAGE_POINTS, CHALLENGES, DAILY_GAME_TARGET, DAILY_MINUTES_TARGET, ACHIEVEMENTS, GEMINI_TEXT_MODEL_FALLBACKS } from './constants';

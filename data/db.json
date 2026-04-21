@@ -5,7 +5,7 @@
       {
         "userId": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
         "theme": "cream",
-        "background_style": "spooky",
+        "background_style": "gradient",
         "language": "en",
         "voice_uri": "Microsoft Rosa Online (Natural) - English (Philippines)",
         "custom_instructions_about_user": "",
@@ -23,7 +23,7 @@
         "enable_daily_time_limit": false,
         "selected_image_provider": "gemini",
         "selected_image_model": "models/gemini-2.5-flash-image",
-        "dyslexia_enabled": false,
+        "dyslexia_enabled": true,
         "dyslexia_ruler_enabled": false,
         "dyslexia_hover_speech_enabled": false,
         "dyslexia_font_size": 1,
@@ -15897,6 +15897,150 @@
           }
         ]
       }
+    ],
+    [
+      "chat-1776804291390",
+      {
+        "session_id": "chat-1776804291390",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776804291390,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776804292049",
+      {
+        "session_id": "chat-1776804292049",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776804292049,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776805197964",
+      {
+        "session_id": "chat-1776805197964",
+        "user_id": "a8cc7f49-9d18-49ee-b65e-0550e91dd889",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776805197964,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "a8cc7f49-9d18-49ee-b65e-0550e91dd889",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776805198212",
+      {
+        "session_id": "chat-1776805198212",
+        "user_id": "a8cc7f49-9d18-49ee-b65e-0550e91dd889",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776805198212,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "a8cc7f49-9d18-49ee-b65e-0550e91dd889",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776805198082",
+      {
+        "session_id": "chat-1776805198082",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776805198082,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
+    ],
+    [
+      "chat-1776805198399",
+      {
+        "session_id": "chat-1776805198399",
+        "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+        "title": "New Chat",
+        "challenge_id": null,
+        "created_at": 1776805198399,
+        "messages": [
+          {
+            "message_id": "init",
+            "user_id": "f23c69ef-d323-44d5-aa18-17cf35c8b195",
+            "role": "assistant",
+            "content": "Hello! I'm your AI Learning Assistant. You can paste text to simplify, ask me to explain a concept, or try a fun challenge from the sidebar. Open settings (top right) to personalize me!",
+            "image_url": null,
+            "base64_data": null,
+            "mime_type": null,
+            "attachment_name": null,
+            "attachment_type": null,
+            "is_loading": false
+          }
+        ]
+      }
     ]
   ],
   "progress": [
@@ -15907,7 +16051,7 @@
           "date_str": "2026-04-21",
           "points_earned": 235,
           "games_played": 26,
-          "minutes_played": 96
+          "minutes_played": 100
         },
         {
           "date_str": "2026-04-20",
