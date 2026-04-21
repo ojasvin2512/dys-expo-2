@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 
 import { SendIcon, FileIcon, CameraIcon, CloseIcon, MicrophoneIcon, BrushIcon, SparklesIcon } from '../constants';
@@ -8,9 +7,6 @@ import { CameraModal } from './CameraModal';
 import { DrawingModal } from './DrawingModal';
 import { ErrorModal } from './ErrorModal';
 import { transcribeAudio } from '../services/geminiService';
-
-
-
 
 interface ChatInputProps {
   onSendMessage: (message: string, attachment: FileAttachment | null) => void;
@@ -50,14 +46,19 @@ const pdfToText = async (file: File): Promise<string> => {
     for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const text = await page.getTextContent();
-        // Fix: Extract 'str' property instead of 'text'
         textContent += text.items.map((item: any) => 'str' in item ? item.str : '').join(' ') + '\n';
     }
     return textContent;
 };
 
-
-export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateImage, isLoading, placeholder, language, enableImageGeneration }) => {
+export const GeminiChatInput: React.FC<ChatInputProps> = ({ 
+  onSendMessage, 
+  onGenerateImage, 
+  isLoading, 
+  placeholder, 
+  language, 
+  enableImageGeneration 
+}) => {
   const [input, setInput] = useState('');
   const [attachment, setAttachment] = useState<FileAttachment | null>(null);
   const [isProcessingFile, setIsProcessingFile] = useState(false);
@@ -68,11 +69,11 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
     title: '',
     message: '',
   });
+  
+  // Gemini STT state
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
-  const [transcriptionMode, setTranscriptionMode] = useState<'offline' | 'disabled'>('offline');
-  const recognitionRef = useRef<any>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -81,173 +82,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    // Setup Web Speech API for offline transcription with enhanced error handling
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      try {
-        const recognition = new SpeechRecognition();
-        
-        // Optimize for best performance
-        recognition.continuous = true;           // Keep listening
-        recognition.interimResults = true;       // Show results in real-time
-        recognition.maxAlternatives = 1;         // Fastest processing
-        recognition.lang = language;             // User's language
-        
-        let baseText = '';
-        let finalTranscript = '';
-        let isManualStop = false;
-        
-        recognition.onstart = () => {
-          baseText = textareaRef.current?.value || '';
-          finalTranscript = '';
-          isManualStop = false;
-          console.log('✅ Offline speech recognition started');
-        };
-        
-        recognition.onresult = (event: any) => {
-          let interimTranscript = '';
-          
-          // Process all results
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            const transcript = event.results[i][0].transcript;
-            
-            if (event.results[i].isFinal) {
-              finalTranscript += transcript + ' ';
-            } else {
-              interimTranscript += transcript;
-            }
-          }
-          
-          // Update input with final + interim results
-          const fullText = finalTranscript + interimTranscript;
-          setInput(baseText ? baseText + ' ' + fullText : fullText);
-        };
-        
-        recognition.onerror = (event: any) => {
-          console.log('Speech recognition event:', event.error);
-          
-          // Handle errors silently without showing to user
-          if (event.error === 'no-speech') {
-            // User paused, just continue listening
-            console.log('No speech detected, continuing...');
-            return;
-          }
-          
-          if (event.error === 'audio-capture') {
-            // Microphone issue, switch to Gemini silently
-            console.log('Audio capture issue, switching to Gemini mode');
-            setUseOfflineSTT(false);
-            setIsRecording(false);
-            return;
-          }
-          
-          if (event.error === 'not-allowed' || event.error === 'permission-denied') {
-            // Permission denied, switch to Gemini silently
-            console.log('Permission denied, switching to Gemini mode');
-            setUseOfflineSTT(false);
-            setIsRecording(false);
-            return;
-          }
-          
-          if (event.error === 'network') {
-            // Network issue with speech service, switch to Gemini silently
-            console.log('Network issue, switching to Gemini mode');
-            setUseOfflineSTT(false);
-            setIsRecording(false);
-            return;
-          }
-          
-          if (event.error === 'aborted') {
-            // User stopped, this is normal
-            console.log('Recognition aborted by user');
-            return;
-          }
-          
-          if (event.error === 'service-not-allowed') {
-            // Service blocked, switch to Gemini silently
-            console.log('Service not allowed, switching to Gemini mode');
-            setUseOfflineSTT(false);
-            setIsRecording(false);
-            return;
-          }
-          
-          // Any other error: switch to Gemini silently
-          console.log(`Unhandled error (${event.error}), switching to Gemini mode`);
-          setUseOfflineSTT(false);
-          setIsRecording(false);
-        };
-        
-        recognition.onend = () => {
-          console.log('Speech recognition ended');
-          
-          // Only restart if not manually stopped and still in recording mode
-          if (!isManualStop && isRecording) {
-            try {
-              // Auto-restart for continuous listening
-              setTimeout(() => {
-                if (isRecording && useOfflineSTT) {
-                  recognition.start();
-                  console.log('Auto-restarted recognition');
-                }
-              }, 100);
-            } catch (e) {
-              console.log('Could not restart recognition:', e);
-              setIsRecording(false);
-            }
-          } else {
-            setIsRecording(false);
-          }
-        };
-        
-        // Store manual stop flag
-        recognition.manualStop = () => {
-          isManualStop = true;
-          recognition.stop();
-        };
-        
-        recognitionRef.current = recognition;
-        console.log('✅ Web Speech API initialized successfully');
-      } catch (error) {
-        console.log('Failed to initialize Web Speech API:', error);
-        setUseOfflineSTT(false);
-      }
-    } else {
-      console.log('Web Speech API not supported, using Gemini only');
-      setUseOfflineSTT(false);
-    }
-    
-    // Cleanup on unmount
-    return () => {
-        if (recognitionRef.current) {
-            try {
-                recognitionRef.current.manualStop ? recognitionRef.current.manualStop() : recognitionRef.current.stop();
-            } catch (e) {
-                console.log('Cleanup: Recognition already stopped');
-            }
-        }
-        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-            mediaRecorderRef.current.stop();
-        }
-        if (audioContextRef.current) {
-            audioContextRef.current.close();
-        }
-        if (animationFrameRef.current) {
-            cancelAnimationFrame(animationFrameRef.current);
-        }
-    }
-  }, [language]);
-
-  // Monitor audio levels while recording - Optimized for performance
+  // Monitor audio levels while recording
   const monitorAudioLevel = (stream: MediaStream) => {
     try {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const analyser = audioContext.createAnalyser();
       const microphone = audioContext.createMediaStreamSource(stream);
       
-      // Optimize analyser settings for performance
-      analyser.fftSize = 128;              // Smaller = faster (was 256)
-      analyser.smoothingTimeConstant = 0.8; // Smooth out fluctuations
+      analyser.fftSize = 128;
+      analyser.smoothingTimeConstant = 0.8;
       microphone.connect(analyser);
       
       audioContextRef.current = audioContext;
@@ -255,12 +98,11 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
       
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
       let lastUpdateTime = 0;
-      const updateInterval = 50; // Update every 50ms (20 FPS) for smooth animation
+      const updateInterval = 50;
       
       const updateLevel = (timestamp: number) => {
         if (!analyserRef.current) return;
         
-        // Throttle updates for better performance
         if (timestamp - lastUpdateTime < updateInterval) {
           animationFrameRef.current = requestAnimationFrame(updateLevel);
           return;
@@ -269,7 +111,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
         lastUpdateTime = timestamp;
         analyser.getByteFrequencyData(dataArray);
         
-        // Calculate RMS (Root Mean Square) for more accurate volume
         let sum = 0;
         for (let i = 0; i < dataArray.length; i++) {
           sum += dataArray[i] * dataArray[i];
@@ -284,118 +125,33 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
       animationFrameRef.current = requestAnimationFrame(updateLevel);
     } catch (error) {
       console.log('Could not monitor audio level:', error);
-      // Continue without audio monitoring - not critical
-    }
-  };
-
-  // Start offline speech recognition (Web Speech API) - Optimized
-  const startOfflineRecognition = async () => {
-    if (!recognitionRef.current) {
-      console.log('Web Speech API not available, using Gemini');
-      setUseOfflineSTT(false);
-      startRecording();
-      return;
-    }
-    
-    try {
-      // Request microphone with optimized settings for speech recognition
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: {
-          echoCancellation: true,        // Remove echo for clearer speech
-          noiseSuppression: true,        // Filter background noise
-          autoGainControl: true,         // Normalize volume
-          sampleRate: 16000,             // Optimal for speech (lower = faster)
-          channelCount: 1,               // Mono for speech
-        } 
-      });
-      
-      // Start audio level monitoring
-      monitorAudioLevel(stream);
-      
-      // Start speech recognition
-      try {
-        recognitionRef.current.start();
-        setIsRecording(true);
-        console.log('✅ Started offline speech recognition');
-      } catch (startError: any) {
-        // Handle "already started" error silently
-        if (startError.message && startError.message.includes('already started')) {
-          console.log('Recognition already running, continuing...');
-          setIsRecording(true);
-        } else {
-          throw startError;
-        }
-      }
-      
-    } catch (error: any) {
-      console.log('Failed to start offline recognition:', error.name || error.message);
-      
-      // Switch to Gemini silently without showing error to user
-      setUseOfflineSTT(false);
-      
-      // Try Gemini mode instead
-      setTimeout(() => {
-        startRecording();
-      }, 100);
-    }
-  };
-
-  // Stop offline speech recognition - Optimized
-  const stopOfflineRecognition = () => {
-    if (recognitionRef.current) {
-      try {
-        // Use manual stop if available to prevent auto-restart
-        if (recognitionRef.current.manualStop) {
-          recognitionRef.current.manualStop();
-        } else {
-          recognitionRef.current.stop();
-        }
-      } catch (e) {
-        console.log('Recognition already stopped');
-      }
-    }
-    
-    setIsRecording(false);
-    setAudioLevel(0);
-    
-    // Stop audio monitoring
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
-    }
-    if (audioContextRef.current) {
-      try {
-        audioContextRef.current.close();
-        audioContextRef.current = null;
-      } catch (e) {
-        console.log('Audio context already closed');
-      }
     }
   };
 
   const startRecording = async () => {
     try {
-      // Request high-quality audio with specific constraints
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
-          echoCancellation: true,        // Remove echo
-          noiseSuppression: true,        // Remove background noise
-          autoGainControl: true,         // Normalize volume
-          sampleRate: 48000,             // High quality sample rate
-          channelCount: 1,               // Mono audio (smaller file)
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+          sampleRate: 16000,        // Optimized for speech (works well for all languages)
+          channelCount: 1,
         } 
       });
       
-      // Use higher bitrate for better quality
+      // Ultra-optimized for speed - minimal bitrate, fastest processing
+      // Works well for Indian languages (Hindi, Bengali, Tamil, etc.)
       const options = {
-        mimeType: 'audio/webm;codecs=opus',  // Opus codec for better quality
-        audioBitsPerSecond: 128000,           // 128 kbps for clear audio
+        mimeType: 'audio/webm;codecs=opus',
+        audioBitsPerSecond: 32000,  // Good balance for speech in any language
       };
       
-      // Fallback if opus not supported
       const mimeType = MediaRecorder.isTypeSupported(options.mimeType) 
         ? options.mimeType 
         : 'audio/webm';
+      
+      console.log(`🎙️ Recording audio with: ${mimeType}, language: ${language}`);
       
       const mediaRecorder = new MediaRecorder(stream, 
         MediaRecorder.isTypeSupported(options.mimeType) ? options : { mimeType }
@@ -411,34 +167,70 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
       };
 
       mediaRecorder.onstop = async () => {
+        const startTime = performance.now(); // Track performance
         setIsTranscribing(true);
         
         try {
           const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
           
-          // Convert to base64
+          // Check file size
+          const fileSizeMB = audioBlob.size / (1024 * 1024);
+          console.log(`📊 Audio: ${fileSizeMB.toFixed(2)} MB`);
+          
+          // Warn if recording is too long (>30 seconds typically = >0.5MB)
+          if (fileSizeMB > 0.5) {
+            console.warn('⚠️ Large audio file - may take longer to transcribe');
+          }
+          
           const reader = new FileReader();
           reader.readAsDataURL(audioBlob);
           reader.onloadend = async () => {
             const base64Audio = (reader.result as string).split(',')[1];
             
             try {
-              // Transcribe using Gemini with enhanced prompt
-              const transcription = await transcribeAudio(base64Audio, mimeType);
+              // Transcribe using ultra-fast Gemini with timeout
+              const transcriptionPromise = transcribeAudio(base64Audio, mimeType, language);
+              const timeoutPromise = new Promise<string>((_, reject) => 
+                setTimeout(() => reject(new Error('Transcription timeout - please record shorter messages')), 10000)
+              );
+              
+              const transcription = await Promise.race([transcriptionPromise, timeoutPromise]);
               
               // Add transcription to input
               const currentText = textareaRef.current?.value || '';
               setInput(currentText ? currentText + ' ' + transcription : transcription);
               
+              const endTime = performance.now();
+              const totalTime = ((endTime - startTime) / 1000).toFixed(2);
+              console.log(`⚡ Transcription completed in ${totalTime}s`);
+              
               setIsTranscribing(false);
             } catch (error: any) {
               console.error('Transcription error:', error);
               setIsTranscribing(false);
+              
+              let errorMessage = 'Could not transcribe your audio recording.';
+              let suggestion = 'Please try again or type your message manually.';
+              
+              if (error.message?.includes('timeout')) {
+                errorMessage = 'Transcription took too long (>10 seconds).';
+                suggestion = 'Try recording a shorter message (10-15 seconds max) for faster results.';
+              } else if (error.message?.includes('quota') || error.message?.includes('QUOTA_EXHAUSTED')) {
+                errorMessage = 'API quota limit reached for speech transcription.';
+                suggestion = 'Please wait for quota reset or type your message manually. The quota resets daily.';
+              } else if (error.message?.includes('network') || error.message?.includes('fetch')) {
+                errorMessage = 'Network error during transcription.';
+                suggestion = 'Please check your internet connection and try again.';
+              } else if (error.message?.includes('busy') || error.message?.includes('503') || error.message?.includes('unavailable')) {
+                errorMessage = 'The transcription service is temporarily busy.';
+                suggestion = 'Please wait 10-15 seconds and try recording again. The service will be available shortly.';
+              }
+              
               setErrorModal({
                 isOpen: true,
                 title: 'Transcription Failed',
-                message: 'Could not transcribe your audio recording.',
-                suggestion: 'Please try again or type your message manually.'
+                message: errorMessage,
+                suggestion: suggestion
               });
             }
           };
@@ -457,7 +249,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
         stream.getTracks().forEach(track => track.stop());
       };
 
-      // Start recording with smaller time slices for faster processing
       mediaRecorder.start();
       setIsRecording(true);
       
@@ -509,19 +300,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
 
   const handleMicClick = () => {
     if (isRecording) {
-      // Stop recording based on current mode
-      if (useOfflineSTT && recognitionRef.current) {
-        stopOfflineRecognition();
-      } else {
-        stopRecording();
-      }
+      stopRecording();
     } else {
-      // Start recording - try offline first, fallback to Gemini
-      if (useOfflineSTT && recognitionRef.current) {
-        startOfflineRecognition();
-      } else {
-        startRecording();
-      }
+      startRecording();
     }
   };
 
@@ -573,7 +354,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Guard against excessively large files
     const MAX_SIZE_MB = 20;
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
         setErrorModal({
@@ -607,19 +387,11 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
         }
     } catch (error: any) {
         console.error("Error processing file:", error);
-        let message = "We couldn't read your file correctly.";
-        let suggestion = "Try refreshing the page or using a different file.";
-        
-        if (error.message?.includes('PDF')) {
-            message = "There was a problem reading this PDF document.";
-            suggestion = "The PDF might be password-protected or corrupted. Try converting it to a text file first.";
-        }
-
         setErrorModal({
             isOpen: true,
             title: 'Upload Failed',
-            message,
-            suggestion
+            message: "We couldn't read your file correctly.",
+            suggestion: "Try refreshing the page or using a different file."
         });
     } finally {
         setIsProcessingFile(false);
@@ -650,7 +422,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
           mimeType: imageData.mimeType,
       });
       
-      // Add context to the input if it's empty
       if (!input.trim()) {
           let suggestion = "";
           if (mode === 'alphabet') {
@@ -676,6 +447,21 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
     }
   }, [input, attachment]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+        mediaRecorderRef.current.stop();
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, []);
+
   return (
     <>
     <div className="w-full bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)] to-transparent pt-4 pb-4 flex-shrink-0"> 
@@ -684,9 +470,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
           <div className="flex flex-col items-center justify-center gap-2 mb-2 animate-fade-in-fast">
             <div className="flex items-center gap-2 text-sm text-red-500">
               <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="font-semibold">
-                {useOfflineSTT ? '🎤 Listening (Offline)' : '🎙️ Recording'} ... Click mic to stop
-              </span>
+              <span className="font-semibold">🎙️ Recording... Click mic to stop</span>
             </div>
             {/* Audio Level Indicator */}
             <div className="w-full max-w-xs">
@@ -712,18 +496,16 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
                  audioLevel < 30 ? '🔉 Good, keep speaking' : 
                  '🔊 Perfect volume!'}
               </p>
-              {useOfflineSTT && (
-                <p className="text-[10px] text-green-600 dark:text-green-400 text-center mt-1 font-semibold">
-                  ⚡ Real-time transcription (No internet needed)
-                </p>
-              )}
+              <p className="text-[10px] text-blue-600 dark:text-blue-400 text-center mt-1 font-semibold">
+                ⚡ Fast Gemini AI Transcription
+              </p>
             </div>
           </div>
         )}
         {isTranscribing && (
           <div className="flex items-center justify-center gap-2 text-sm text-blue-500 mb-2 animate-fade-in-fast">
             <LoadingSpinner />
-            <span className="font-semibold">Transcribing your audio...</span>
+            <span className="font-semibold">⚡ Fast transcribing...</span>
           </div>
         )}
         {isProcessingFile && (
@@ -743,12 +525,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
                             referrerPolicy="no-referrer"
                         />
                     </div>
-                ) : attachment.type === 'audio' ? (
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 bg-purple-100 text-purple-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                        </svg>
-                    </div>
                 ) : (
                     <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${attachment.name.toLowerCase().endsWith('.pdf') ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
                         <span className="text-[10px] font-black">{attachment.name.toLowerCase().endsWith('.pdf') ? 'PDF' : 'TXT'}</span>
@@ -757,7 +533,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
                 <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-[var(--text-primary)] truncate">{attachment.name}</p>
                     <p className="text-[10px] text-[var(--text-secondary)] uppercase font-medium tracking-wider">
-                        {attachment.type === 'image' ? 'Image Ready' : attachment.type === 'audio' ? 'Audio Recording' : 'Document Loaded'}
+                        {attachment.type === 'image' ? 'Image Ready' : 'Document Loaded'}
                     </p>
                 </div>
                 <button onClick={() => setAttachment(null)} className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-[var(--text-secondary)] transition-colors" aria-label="Remove attachment">
@@ -792,12 +568,14 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
               className={`p-2 sm:p-2.5 disabled:opacity-50 transition-colors ${
                 isRecording
                   ? 'text-red-500 animate-pulse-mic'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+                  : isTranscribing
+                    ? 'text-blue-500'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
-              aria-label={isRecording ? 'Stop recording' : 'Start recording'}
+              aria-label={isRecording ? 'Stop recording' : isTranscribing ? 'Transcribing...' : 'Start recording'}
               title={isRecording ? 'Click to stop recording' : 
-                     useOfflineSTT ? '🎤 Voice input (Offline real-time)' : 
-                     '🎙️ Voice input (Gemini AI)'}
+                     isTranscribing ? '⚡ Fast transcribing...' :
+                     '🎙️ Voice input (Fast Gemini AI)'}
             >
               <MicrophoneIcon />
             </button>
@@ -811,7 +589,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
               placeholder={placeholder}
               className="flex-grow bg-transparent pl-2 pr-12 py-2.5 text-base text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] resize-none border-none outline-none max-h-52 overflow-y-auto"
               rows={1}
-              disabled={isLoading || isProcessingFile || isRecording}
+              disabled={isLoading || isProcessingFile || isTranscribing}
             />
               {enableImageGeneration && (
                 <div className="absolute left-2 -top-8 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-md px-2 py-1 text-[10px] text-[var(--text-secondary)] shadow-sm animate-fade-in-fast whitespace-nowrap">
@@ -820,11 +598,11 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onGenerateI
               )}
             <button
               onClick={handleSend}
-              disabled={isLoading || isProcessingFile || (!input.trim() && !attachment)}
+              disabled={isLoading || isProcessingFile || isTranscribing || (!input.trim() && !attachment)}
               className="absolute right-2 bottom-2 p-2 rounded-lg transition-colors duration-200 text-white bg-[var(--accent-color)] disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed hover:bg-[var(--accent-color-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"
               aria-label="Send message"
             >
-              {isLoading || isProcessingFile ? (
+              {isLoading || isProcessingFile || isTranscribing ? (
                 <div className="w-5 h-5">
                   <LoadingSpinner />
                 </div>

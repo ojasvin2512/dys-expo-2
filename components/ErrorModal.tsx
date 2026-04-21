@@ -8,9 +8,11 @@ interface ErrorModalProps {
   title: string;
   message: string;
   suggestion?: string;
+  onRetry?: () => void;
+  retryText?: string;
 }
 
-export const ErrorModal: React.FC<ErrorModalProps> = ({ isOpen, onClose, title, message, suggestion }) => {
+export const ErrorModal: React.FC<ErrorModalProps> = ({ isOpen, onClose, title, message, suggestion, onRetry, retryText }) => {
   if (!isOpen) return null;
 
   return (
@@ -42,7 +44,18 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({ isOpen, onClose, title, 
             </div>
           )}
         </div>
-        <div className="p-4 border-t border-[var(--border-color)] flex justify-end">
+        <div className="p-4 border-t border-[var(--border-color)] flex justify-end gap-3">
+          {onRetry && (
+            <button 
+              onClick={() => {
+                onRetry();
+                onClose();
+              }}
+              className="px-6 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+            >
+              {retryText || 'Try Again'}
+            </button>
+          )}
           <button 
             onClick={onClose}
             className="px-6 py-2 bg-[var(--accent-color)] text-white font-semibold rounded-lg hover:bg-[var(--accent-color-hover)] transition-colors"

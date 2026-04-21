@@ -33,6 +33,9 @@ export default defineConfig(({ mode }) => {
         'process.env.GEMINI_API_KEY_9': JSON.stringify(env.GEMINI_API_KEY_9 || ""),
         'process.env.GEMINI_API_KEY_10': JSON.stringify(env.GEMINI_API_KEY_10 || ""),
         'process.env.OPENROUTER_API_KEY': JSON.stringify(env.OPENROUTER_API_KEY || ""),
+        'process.env.OPENROUTER_API_KEY_2': JSON.stringify(env.OPENROUTER_API_KEY_2 || ""),
+        'process.env.OPENROUTER_API_KEY_3': JSON.stringify(env.OPENROUTER_API_KEY_3 || ""),
+        'process.env.OPENROUTER_API_KEY_4': JSON.stringify(env.OPENROUTER_API_KEY_4 || ""),
       },
       resolve: {
         alias: {

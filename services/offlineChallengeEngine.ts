@@ -5,6 +5,7 @@ import {
   OFFLINE_SYNONYMS, OFFLINE_RHYMES, OFFLINE_ODD_ONE_OUT, OFFLINE_SPELLING,
   OFFLINE_STORY_STARTERS, getRandomQuestions
 } from '../data/offlineQuestions';
+import { searchKnowledge, getRandomKnowledge } from '../data/offlineKnowledge';
 
 export type OfflineChallengeState = {
   challengeId: string;
@@ -13,14 +14,95 @@ export type OfflineChallengeState = {
   questions: any[];
   storyTurns: number;
   waitingForStory: boolean;
-  attempts: number; // how many times user tried current question
+  attempts: number;
 };
 
 function shuffle<T>(arr: T[]): T[] {
   return [...arr].sort(() => Math.random() - 0.5);
 }
 
-// Detect when user is confused, giving up, or asking for help
+// ─── DYSLEXIA-AWARE FUZZY MATCHING ───────────────────────────────────────────
+
+/**
+ * Levenshtein edit distance — counts insertions, deletions, substitutions
+ * needed to turn string a into string b.
+ */
+function editDistance(a: string, b: string): number {
+  const m = a.length, n = b.length;
+  const dp: number[][] = Array.from({ length: m + 1 }, (_, i) =>
+    Array.from({ length: n + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
+  );
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      dp[i][j] = a[i - 1] === b[j - 1]
+        ? dp[i - 1][j - 1]
+        : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+
+/**
+ * Normalise a string for dyslexia-tolerant comparison:
+ * - lowercase
+ * - collapse whitespace
+ * - strip punctuation
+ * - common phonetic substitutions (b↔d, p↔q, m↔n, etc.)
+ */
+function normalise(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    // common dyslexic letter confusions
+    .replace(/ph/g, 'f')
+    .replace(/ck/g, 'k')
+    .replace(/qu/g, 'kw');
+}
+
+/**
+ * Returns true if two strings are "close enough" for a dyslexic student.
+ * Tolerance scales with word length.
+ */
+function fuzzyMatch(input: string, target: string): boolean {
+  const a = normalise(input);
+  const b = normalise(target);
+  if (a === b) return true;
+  const maxLen = Math.max(a.length, b.length);
+  if (maxLen === 0) return true;
+  // Allow 1 error per 5 chars, minimum 1 error allowed for words ≥3 chars
+  const tolerance = maxLen <= 4 ? 1 : maxLen <= 7 ? 2 : Math.floor(maxLen / 5) + 1;
+  return editDistance(a, b) <= tolerance;
+}
+
+/**
+ * Check if the student's input contains the target word (fuzzy substring).
+ * Useful for odd-one-out where they might type the word in a sentence.
+ */
+function fuzzyContains(input: string, target: string): boolean {
+  const words = normalise(input).split(' ');
+  return words.some(w => fuzzyMatch(w, target));
+}
+
+/**
+ * For sentence scramble: check if the student got the right words
+ * in roughly the right order, even with typos.
+ */
+function scrambleFuzzyMatch(input: string, answer: string): boolean {
+  // Exact match first
+  if (normalise(input) === normalise(answer)) return true;
+  // Word-by-word fuzzy: all words present and in order
+  const inputWords = normalise(input).split(' ').filter(Boolean);
+  const answerWords = normalise(answer).split(' ').filter(Boolean);
+  if (inputWords.length !== answerWords.length) return false;
+  const matchedCount = inputWords.filter((w, i) => fuzzyMatch(w, answerWords[i])).length;
+  // Accept if ≥80% of words match (allows 1 typo in a 5-word sentence)
+  return matchedCount / answerWords.length >= 0.8;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 function isConfused(input: string): boolean {
   return /^(idk|i don'?t know|dont know|no idea|not sure|unsure|confused|help|hint|skip|pass|give up|i give up|tell me|what is it|what'?s the answer|show me|i'?m stuck|stuck|can'?t|cannot|nope|nah|hmm+|ugh|what\?*)$/i.test(input.trim());
 }
@@ -158,29 +240,59 @@ export function processAnswer(state: OfflineChallengeState, userInput: string): 
     return { response, correct: false, points, complete, newState };
   }
 
-  // Check answer
+  // Check answer — dyslexia-aware fuzzy matching
   switch (state.challengeId) {
     case 'scramble-1':
-      correct = input.replace(/[^a-z0-9 ]/gi, '').toLowerCase() === q.answer.replace(/[^a-z0-9 ]/gi, '').toLowerCase();
+      correct = scrambleFuzzyMatch(input, q.answer);
       break;
-    case 'math-1':
-      correct = parseInt(input.replace(/[^0-9]/g, '')) === q.answer;
+    case 'math-1': {
+      // Accept number written as digits or words like "seven", "twenty four"
+      const numWords: Record<string, number> = {
+        zero:0,one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,
+        ten:10,eleven:11,twelve:12,thirteen:13,fourteen:14,fifteen:15,
+        sixteen:16,seventeen:17,eighteen:18,nineteen:19,twenty:20,
+        thirty:30,forty:40,fifty:50,sixty:60,seventy:70,eighty:80,ninety:90,
+        hundred:100,thousand:1000
+      };
+      const digits = parseInt(input.replace(/[^0-9]/g, ''));
+      if (!isNaN(digits) && digits === q.answer) { correct = true; break; }
+      // Try parsing word numbers
+      let wordNum = 0;
+      let lastVal = 0;
+      input.split(/[\s-]+/).forEach(w => {
+        const v = numWords[w];
+        if (v !== undefined) {
+          if (v >= 100) { wordNum = (wordNum + lastVal) * v; lastVal = 0; }
+          else if (v >= 20) { lastVal += v; }
+          else { lastVal += v; }
+        }
+      });
+      wordNum += lastVal;
+      correct = wordNum === q.answer;
       break;
-    case 'pattern-1':
-      correct = parseInt(input.replace(/[^0-9]/g, '')) === q.answer;
+    }
+    case 'pattern-1': {
+      const n = parseInt(input.replace(/[^0-9]/g, ''));
+      correct = !isNaN(n) && n === q.answer;
       break;
+    }
     case 'synonym-1':
-      correct = q.synonyms.some((s: string) => s.toLowerCase() === input);
+      correct = q.synonyms.some((s: string) => fuzzyMatch(input, s));
       break;
     case 'rhyme-1':
-      correct = q.rhymes.some((r: string) => r.toLowerCase() === input) ||
-        (input.length >= 2 && q.word.toLowerCase().slice(-2) === input.slice(-2) && input !== q.word.toLowerCase());
+      correct = q.rhymes.some((r: string) => fuzzyMatch(input, r)) ||
+        // Accept any real-sounding word that shares the ending sound
+        (input.length >= 2 &&
+          normalise(q.word).slice(-2) === normalise(input).slice(-2) &&
+          !fuzzyMatch(input, q.word));
       break;
     case 'odd-one-out-1':
-      correct = input === q.odd.toLowerCase() || input.includes(q.odd.toLowerCase());
+      correct = fuzzyContains(input, q.odd);
       break;
     case 'spelling-1':
-      correct = input === q.correct.toLowerCase();
+      correct = fuzzyMatch(input, q.correct) &&
+        // Make sure they're not just retyping the wrong word
+        !fuzzyMatch(input, q.wrong);
       break;
   }
 
@@ -194,12 +306,20 @@ export function processAnswer(state: OfflineChallengeState, userInput: string): 
     };
     points = pointsMap[state.challengeId] || 10;
 
+    // Detect if they had a typo but we still accepted it — give a gentle note
+    const wasTypo = state.challengeId === 'spelling-1'
+      ? !fuzzyMatch(input, q.correct) || input !== normalise(q.correct)
+      : false;
+    const praiseMsg = wasTypo
+      ? `Almost perfect! 😊 I could tell you meant **"${q.correct}"** — great thinking! ✨`
+      : pick(PRAISE);
+
     if (newState.correctCount >= 5) {
       complete = true;
-      response = `${pick(PRAISE)}\n\n🎊 **You completed the challenge!** You got all 5 correct!\n\nYou're absolutely brilliant! Keep up this amazing work — you're learning so fast! ⭐\n\n[CHALLENGE_COMPLETE:50]`;
+      response = `${praiseMsg}\n\n🎊 **You completed the challenge!** You got all 5 correct!\n\nYou're absolutely brilliant! Keep up this amazing work — you're learning so fast! ⭐\n\n[CHALLENGE_COMPLETE:50]`;
     } else {
       const nextQ = newState.questions[newState.questionIndex];
-      response = `${pick(PRAISE)}\n\n${getNextQuestion(state.challengeId, nextQ)} *(${newState.correctCount}/5 correct)*`;
+      response = `${praiseMsg}\n\n${getNextQuestion(state.challengeId, nextQ)} *(${newState.correctCount}/5 correct)*`;
     }
   } else {
     // After 2 wrong attempts, give a stronger hint
@@ -266,3 +386,24 @@ export const OFFLINE_CHALLENGE_IDS = new Set([
   'scramble-1', 'math-1', 'pattern-1', 'synonym-1',
   'rhyme-1', 'odd-one-out-1', 'spelling-1', 'story-1'
 ]);
+
+
+/**
+ * Handle general educational questions using the offline knowledge base.
+ * This makes the offline engine act like an AI tutor even outside challenges.
+ */
+export function answerGeneralQuestion(question: string): string | null {
+  const knowledge = searchKnowledge(question);
+  
+  if (knowledge) {
+    return `Great question! Let me explain.\n\n${knowledge.answer}\n\nVisual Aid: [${knowledge.keywords[0]}]`;
+  }
+  
+  // If no exact match, provide a helpful fallback
+  if (/what is|what are|tell me about|explain/i.test(question)) {
+    const randomFact = getRandomKnowledge();
+    return `I don't have specific information about that right now, but here's something interesting you might like to know:\n\n**${randomFact.question}**\n\n${randomFact.answer}\n\nFeel free to ask me about animals, science, math, language, or geography! 🌟`;
+  }
+  
+  return null;
+}

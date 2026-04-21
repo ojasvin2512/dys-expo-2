@@ -4,11 +4,14 @@ import confetti from 'canvas-confetti';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { ChatFeed } from './components/ChatFeed';
-import { ChatInput } from './components/ChatInput';
+import { GeminiChatInput } from './components/GeminiChatInput';
 const SettingsModal = React.lazy(() => import('./components/SettingsModal').then(m => ({ default: m.SettingsModal })));
 import { ReadingRuler } from './components/ReadingRuler';
+import { IntroPage } from './components/IntroPage';
+import './styles/IntroPage.css';
+import './styles/themes.css';
 import type { Message, Theme, CustomInstructions, Language, FileAttachment, ChatSession, ChatMetadata, Challenge, UserData, BackgroundStyle, DyslexiaSettings, SkillStats, Achievement } from './types';
-import { createChat, generateImageForText, generateChatTitle, sendStreamWithFallback, fetchRealImage, isOpenRouterAvailable, sendViaOpenRouter } from './services/geminiService';
+import { createChat, generateImageForText, generateChatTitle, sendStreamWithFallback, fetchRealImage, isOpenRouterAvailable, sendViaOpenRouter, baseSystemInstruction } from './services/geminiService';
 import { IMAGE_PROMPT_PREFIX, IMAGE_SUGGESTION, UI_STRINGS, DAILY_GOAL, MESSAGE_POINTS, CHALLENGES, DAILY_GAME_TARGET, DAILY_MINUTES_TARGET, ACHIEVEMENTS, GEMINI_TEXT_MODEL_FALLBACKS } from './constants';
 import { findEncyclopediaEntry } from './services/encyclopediaService';
 import { findEducationalAsset } from './educationalLibrary';
@@ -122,6 +125,10 @@ const AchievementPopup: React.FC<{ achievement: Achievement | null, onClose: () 
 };
 
 function AppInner() {
+  const [showIntro, setShowIntro] = useState<boolean>(() => {
+    const hasSeenIntro = localStorage.getItem('dyslearn-has-seen-intro');
+    return !hasSeenIntro;
+  });
   const [chatHistory, setChatHistory] = useState<ChatMetadata[]>([]);
   const [activeMessages, setActiveMessages] = useState<Message[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -131,8 +138,8 @@ function AppInner() {
   const [userEmail, setUserEmail] = useState<string | null>(() => localStorage.getItem('dyslearn-user-email'));
   
   // Settings State
-  const [theme, setTheme] = useState<Theme>('light');
-  const [backgroundStyle, setBackgroundStyle] = useState<BackgroundStyle>('none');
+  const [theme, setTheme] = useState<Theme>('pixel');
+  const [backgroundStyle, setBackgroundStyle] = useState<BackgroundStyle>('pixelart');
   const [language, setLanguage] = useState<Language>('en');
   const [customInstructions, setCustomInstructions] = useState<CustomInstructions>({ aboutUser: '', howToRespond: '' });
   const [voiceURI, setVoiceURI] = useState<string | null>(null);
@@ -213,7 +220,7 @@ function AppInner() {
         })
       });
     } catch (e) {
-      console.error("Databricks session sync failed:", e);
+      // Silently fail - backend is optional
     }
   };
 
@@ -236,7 +243,7 @@ function AppInner() {
         })
       });
     } catch (e) {
-      console.error("Databricks message sync failed:", e);
+      // Silently fail - backend is optional
     }
   };
 
@@ -396,7 +403,7 @@ function AppInner() {
           })
         });
       } catch (err) {
-        console.error("Databricks sync skipped (backend offline):", err);
+        // Silently fail - backend is optional
       }
     };
     
@@ -448,15 +455,68 @@ function AppInner() {
   }, [notificationsEnabled]);
 
   // Speech Handlers
+  
+  // Helper function to get the best voice for current language
+  const getVoiceForLanguage = (targetLanguage: Language): SpeechSynthesisVoice | null => {
+    const voices = window.speechSynthesis.getVoices();
+    
+    // If user manually selected a voice, use it
+    if (voiceURI) {
+      const selectedVoice = voices.find(v => v.voiceURI === voiceURI);
+      if (selectedVoice) return selectedVoice;
+    }
+    
+    // Auto-select voice based on language
+    const langMap: Record<string, string[]> = {
+      'hi': ['hi-IN', 'hi'],           // Hindi
+      'bn': ['bn-IN', 'bn-BD', 'bn'],  // Bengali
+      'ta': ['ta-IN', 'ta'],           // Tamil
+      'es': ['es-ES', 'es-MX', 'es'],  // Spanish
+      'fr': ['fr-FR', 'fr'],           // French
+      'de': ['de-DE', 'de'],           // German
+      'it': ['it-IT', 'it'],           // Italian
+      'en': ['en-US', 'en-GB', 'en']   // English
+    };
+    
+    const targetLangs = langMap[targetLanguage] || ['en-US', 'en'];
+    
+    // Try to find a voice that matches the target language
+    for (const targetLang of targetLangs) {
+      const matchedVoice = voices.find(v => v.lang.startsWith(targetLang));
+      if (matchedVoice) {
+        console.log(`🔊 Auto-selected voice: ${matchedVoice.name} (${matchedVoice.lang}) for language: ${targetLanguage}`);
+        return matchedVoice;
+      }
+    }
+    
+    console.log(`🔊 No specific voice found for ${targetLanguage}, browser will use default`);
+    return null;
+  };
+  
   const handleSpeak = (text: string, messageId: string) => {
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = dyslexiaSettings.speechRate;
-    if (voiceURI) {
-       const voices = window.speechSynthesis.getVoices();
-       const selectedVoice = voices.find(v => v.voiceURI === voiceURI);
-       if (selectedVoice) utterance.voice = selectedVoice;
+    
+    // Set voice and language
+    const voice = getVoiceForLanguage(language);
+    if (voice) {
+      utterance.voice = voice;
+      utterance.lang = voice.lang;
+    } else {
+      // Set language code even if no specific voice found
+      const langMap: Record<string, string> = {
+        'hi': 'hi-IN',
+        'bn': 'bn-IN',
+        'ta': 'ta-IN',
+        'es': 'es-ES',
+        'fr': 'fr-FR',
+        'de': 'de-DE',
+        'it': 'it-IT',
+        'en': 'en-US'
+      };
+      utterance.lang = langMap[language] || 'en-US';
     }
 
     utterance.onstart = () => {
@@ -467,7 +527,8 @@ function AppInner() {
         setSpeakingMessageId(null);
         setIsSpeechPaused(false);
     };
-    utterance.onerror = () => {
+    utterance.onerror = (event) => {
+        console.error('Speech synthesis error:', event);
         setSpeakingMessageId(null);
         setIsSpeechPaused(false);
     };
@@ -535,12 +596,22 @@ function AppInner() {
           if (window.speechSynthesis.speaking && speakingMessageId) return;
 
           const utterance = new SpeechSynthesisUtterance(cleanText);
-          if (voiceURI) {
-            const voices = window.speechSynthesis.getVoices();
-            const selectedVoice = voices.find(v => v.voiceURI === voiceURI);
-            if (selectedVoice) utterance.voice = selectedVoice;
-          }
           utterance.rate = dyslexiaSettings.speechRate;
+          
+          // Use the same voice selection logic
+          const voice = getVoiceForLanguage(language);
+          if (voice) {
+            utterance.voice = voice;
+            utterance.lang = voice.lang;
+          } else {
+            const langMap: Record<string, string> = {
+              'hi': 'hi-IN', 'bn': 'bn-IN', 'ta': 'ta-IN',
+              'es': 'es-ES', 'fr': 'fr-FR', 'de': 'de-DE',
+              'it': 'it-IT', 'en': 'en-US'
+            };
+            utterance.lang = langMap[language] || 'en-US';
+          }
+          
           window.speechSynthesis.cancel();
           window.speechSynthesis.speak(utterance);
         }, 300); // Slightly longer delay to be more intentional
@@ -581,8 +652,9 @@ function AppInner() {
 
         if (userRes.success && userRes.data) {
           const d = userRes.data;
-          if (d.theme) setTheme(d.theme as Theme);
-          if (d.background_style) setBackgroundStyle(d.background_style as BackgroundStyle);
+          // Set theme with pixel as default for new users
+          setTheme((d.theme as Theme) || 'pixel');
+          setBackgroundStyle((d.background_style as BackgroundStyle) || 'pixelart');
           if (d.language) setLanguage(d.language as Language);
           if (d.voice_uri) setVoiceURI(d.voice_uri);
           
@@ -680,7 +752,7 @@ function AppInner() {
            }]);
         }
       } catch (e) {
-        console.error("Failed to load state from Databricks API", e);
+        // Backend not available - use local storage only
         const newSession = createNewSession('en');
         setChatHistory([newSession]);
         setActiveChatId(newSession.id);
@@ -778,7 +850,9 @@ function AppInner() {
              dyslexia_speech_rate: dyslexiaSettings.speechRate
           })
         });
-      } catch(e) { console.error("API Sync config error", e); }
+      } catch(e) { 
+        // Silently fail - backend is optional
+      }
     };
 
     const handler = setTimeout(() => {
@@ -814,7 +888,7 @@ function AppInner() {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('light', 'dark', 'sepia', 'ocean', 'forest', 'sunset', 'lavender', 'midnight', 'cream');
+    root.classList.remove('light', 'dark', 'sepia', 'ocean', 'forest', 'sunset', 'lavender', 'midnight', 'cream', 'pixel');
     root.classList.add(theme);
     
     if (dyslexiaSettings.enabled) {
@@ -1124,6 +1198,21 @@ function AppInner() {
       window.speechSynthesis.cancel();
       const utt = new SpeechSynthesisUtterance(q.question);
       utt.rate = 0.9;
+      
+      // Use language-aware voice
+      const voice = getVoiceForLanguage(language);
+      if (voice) {
+        utt.voice = voice;
+        utt.lang = voice.lang;
+      } else {
+        const langMap: Record<string, string> = {
+          'hi': 'hi-IN', 'bn': 'bn-IN', 'ta': 'ta-IN',
+          'es': 'es-ES', 'fr': 'fr-FR', 'de': 'de-DE',
+          'it': 'it-IT', 'en': 'en-US'
+        };
+        utt.lang = langMap[language] || 'en-US';
+      }
+      
       window.speechSynthesis.speak(utt);
     }, 800);
   };
@@ -1264,6 +1353,21 @@ Follow these rules:
         window.speechSynthesis.cancel();
         const utt = new SpeechSynthesisUtterance(textToRead);
         utt.rate = 0.9;
+        
+        // Use language-aware voice
+        const voice = getVoiceForLanguage(language);
+        if (voice) {
+          utt.voice = voice;
+          utt.lang = voice.lang;
+        } else {
+          const langMap: Record<string, string> = {
+            'hi': 'hi-IN', 'bn': 'bn-IN', 'ta': 'ta-IN',
+            'es': 'es-ES', 'fr': 'fr-FR', 'de': 'de-DE',
+            'it': 'it-IT', 'en': 'en-US'
+          };
+          utt.lang = langMap[language] || 'en-US';
+        }
+        
         window.speechSynthesis.speak(utt);
         const readMsg: Message = { id: (Date.now()+1).toString(), role: 'assistant', content: `🔊 Reading the question aloud for you!`, isLoading: false };
         setActiveMessages(prev => [...prev, userMsg, readMsg]);
@@ -1321,6 +1425,21 @@ Follow these rules:
           window.speechSynthesis.cancel();
           const utt = new SpeechSynthesisUtterance(nextQ.question);
           utt.rate = 0.9;
+          
+          // Use language-aware voice
+          const voice = getVoiceForLanguage(language);
+          if (voice) {
+            utt.voice = voice;
+            utt.lang = voice.lang;
+          } else {
+            const langMap: Record<string, string> = {
+              'hi': 'hi-IN', 'bn': 'bn-IN', 'ta': 'ta-IN',
+              'es': 'es-ES', 'fr': 'fr-FR', 'de': 'de-DE',
+              'it': 'it-IT', 'en': 'en-US'
+            };
+            utt.lang = langMap[language] || 'en-US';
+          }
+          
           window.speechSynthesis.speak(utt);
         }, 1500);
       }
@@ -1595,55 +1714,133 @@ Follow these rules:
       const errMsg = e instanceof Error ? e.message : String(e);
       if ((errMsg === 'QUOTA_EXHAUSTED' || /quota|RESOURCE_EXHAUSTED/i.test(errMsg)) && isOpenRouterAvailable()) {
         try {
+          // For image uploads, try Gemini vision one more time with a different approach
+          // Vision models often have separate quotas from text models
+          if (attachment?.type === 'image' && attachment.mimeType) {
+            try {
+              setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: '', isLoading: true } : m));
+              
+              // Try using Gemini's vision model directly (separate quota from text models)
+              const visionModels = ['models/gemini-2.0-flash-exp', 'models/gemini-1.5-flash', 'models/gemini-1.5-pro'];
+              const imagePart = { inlineData: { mimeType: attachment.mimeType, data: attachment.content } };
+              const textPart = { text: userInput || 'Analyze this image and describe what you see in detail.' };
+              
+              const visionStream = await sendStreamWithFallback(
+                (model) => createChat(customInstructions, language, historyForApi, activeChat.challengeSystemPrompt, model),
+                () => [textPart, imagePart],
+                visionModels
+              );
+
+              let fullResponse = '';
+              setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? {...m, isLoading: false} : m));
+              
+              for await (const chunk of visionStream) {
+                fullResponse += (chunk.text || '');
+                setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? {...m, content: fullResponse} : m));
+              }
+
+              setIsLoading(false);
+              return;
+            } catch (visionErr) {
+              console.warn('Vision model also exhausted, falling back to text-only explanation:', visionErr);
+              // If vision fails too, provide helpful text-only response
+              const imageNotSupported = `I can see you've uploaded an image! 📸\n\nUnfortunately, all my image analysis systems are currently at their daily limit. But I can still help you!\n\n**What I can do:**\n• Answer questions if you describe what's in the image\n• Explain concepts related to the photo\n• Help with homework, math, science, or any topic\n\nJust tell me what's in the image or what you'd like to know! 😊`;
+              setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: imageNotSupported, isLoading: false } : m));
+              setIsLoading(false);
+              return;
+            }
+          }
+
           setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: '', isLoading: true } : m));
-          const orResponse = await sendViaOpenRouter(
-            `You are a friendly and patient AI Learning Assistant for students with dyslexia, created by Ojasvin Anand.
 
-RESPONSE FORMAT — ALWAYS FOLLOW THIS EXACTLY:
+          // Build the same system prompt Gemini uses
+          let orSystemPrompt = activeChat.challengeSystemPrompt || baseSystemInstruction;
+          if (!activeChat.challengeSystemPrompt) {
+            if (customInstructions?.aboutUser || customInstructions?.howToRespond) {
+              orSystemPrompt += '\n\n--- CUSTOM INSTRUCTIONS ---\n';
+              if (customInstructions.aboutUser) orSystemPrompt += `ABOUT THE USER:\n${customInstructions.aboutUser}\n\n`;
+              if (customInstructions.howToRespond) orSystemPrompt += `HOW TO RESPOND:\n${customInstructions.howToRespond}\n`;
+              orSystemPrompt += '---------------------------\n';
+            }
+            const { LANGUAGES } = await import('./constants');
+            const langLabel = LANGUAGES.find((l: any) => l.code === language)?.label || 'English';
+            orSystemPrompt += `\n--- LANGUAGE RULE ---\nIMPORTANT: You MUST write all your responses exclusively in ${langLabel} (${language}). Do not switch languages.`;
+          }
 
-1. Start with a warm opener like "That's a great question! It looks like you're asking about [topic]."
-2. Give a short simple explanation in 1-3 sentences (like talking to a 10-year-old).
-3. List 3-5 bold key points in this format:
-**Key point title:** Short explanation.
-4. End with one encouraging closing sentence.
-5. Add a Visual Aid tag at the very end: Visual Aid: [topic name]
-6. Add source links at the very end in this EXACT format (replace TOPIC with the actual topic using + for spaces):
-[SOURCES::Google Images::https://www.google.com/search?q=TOPIC&tbm=isch::🔍||YouTube::https://www.youtube.com/results?search_query=TOPIC::📺||Britannica::https://www.britannica.com/search?query=TOPIC::📖||Wikimedia::https://commons.wikimedia.org/w/index.php?search=TOPIC::🖼️]
+          // Handle text file attachments
+          let orUserInput = userInput;
+          if (attachment?.type === 'text') {
+            orUserInput = `Based on the content of the attached file "${attachment.name}", please answer the following:\n\n"${userInput}"\n\n--- FILE CONTENT ---\n${attachment.content}`;
+          }
 
-Example for "cow":
-[SOURCES::Google Images::https://www.google.com/search?q=cow&tbm=isch::🔍||YouTube::https://www.youtube.com/results?search_query=cow::📺||Britannica::https://www.britannica.com/search?query=cow::📖||Wikimedia::https://commons.wikimedia.org/w/index.php?search=cow::🖼️]
+          // Convert message history to OpenRouter format
+          const orHistory = historyForApi
+            .filter(m => m.id !== 'init')
+            .map(m => ({
+              role: m.role === 'assistant' ? 'assistant' : 'user',
+              content: m.content || '...',
+            }));
 
-Always be encouraging and positive. Keep language simple and clear.`,
-            userInput
-          );
+          const orResponse = await sendViaOpenRouter(orSystemPrompt, orUserInput, orHistory);
 
-          // Process Visual Aid tag from OpenRouter response (same as Gemini pipeline)
-          const orImageMatch = orResponse.match(/IMAGE_PROMPT::\s*(.*)/i) ||
-                               orResponse.match(/Visual Aid:\s*\[(.*?)\]/i);
+          // Process the response the same way Gemini responses are processed
+          let orFinalContent = orResponse;
+
+          // Strip any literal step labels the model may have output
+          orFinalContent = orFinalContent
+            .replace(/\*?\*?Step\s+\d+\s*[—–-]+\s*[^:*\n]+:\*?\*?\n?/gi, '')
+            .trim();
+
+          // Check for Visual Aid tag and trigger image fetch
+          const orImageMatch = orFinalContent.match(/IMAGE_PROMPT::\s*(.*)/i) ||
+                               orFinalContent.match(/Visual Aid:\s*\[(.*?)\]/i);
+
           if (orImageMatch) {
             const fullMatchText = orImageMatch[0];
             const imagePrompt = orImageMatch[1].split('\n')[0].replace(/[\[\]`]/g, '').trim();
-            const textPart = orResponse.split(fullMatchText)[0].trim();
             const externalLinks = getExternalImageLinks(imagePrompt, userInput);
+            const textPart = orFinalContent.split(fullMatchText)[0].trim();
+
+            setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: textPart || orFinalContent, isLoading: false } : m));
+
             try {
-              const { findEducationalAsset } = await import('./educationalLibrary');
-              const localAssetPath = findEducationalAsset(userInput) || findEducationalAsset(imagePrompt);
-              if (localAssetPath) {
-                setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, imageUrl: localAssetPath, content: textPart + externalLinks, isLoading: false } : m));
+              const realImageUrl = await fetchRealImage(imagePrompt);
+              if (realImageUrl) {
+                setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? {
+                  ...m, imageUrl: realImageUrl, content: textPart ? `${textPart}${externalLinks}` : `Look at this for help:${externalLinks}`, isLoading: false
+                } : m));
               } else {
-                const realImageUrl = await fetchRealImage(imagePrompt);
-                if (realImageUrl) {
-                  setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, imageUrl: realImageUrl, content: textPart + externalLinks, isLoading: false } : m));
+                const localAsset = findEducationalAsset(userInput) || findEducationalAsset(imagePrompt);
+                if (localAsset) {
+                  setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? {
+                    ...m, imageUrl: localAsset, content: textPart ? `${textPart}${externalLinks}` : `Look at this for help:${externalLinks}`, isLoading: false
+                  } : m));
                 } else {
-                  setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: textPart + externalLinks, isLoading: false } : m));
+                  setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? {
+                    ...m, content: textPart ? `${textPart}${externalLinks}` : `${orFinalContent}${externalLinks}`, isLoading: false
+                  } : m));
                 }
               }
             } catch {
-              setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: orResponse, isLoading: false } : m));
+              setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? {
+                ...m, content: textPart ? `${textPart}${externalLinks}` : orFinalContent, isLoading: false
+              } : m));
             }
           } else {
-            setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: orResponse, isLoading: false } : m));
+            setActiveMessages(prev => prev.map(m => m.id === assistantMessageId ? { ...m, content: orFinalContent, isLoading: false } : m));
           }
+
+          // Generate chat title for new chats (same as Gemini path)
+          if (isNewChat && orFinalContent) {
+            try {
+              const titlePrompt = `User: ${userInput}\nAssistant: ${orFinalContent}`;
+              const newTitle = await generateChatTitle(titlePrompt);
+              setChatHistory(prev => prev.map(c => c.id === activeChatId ? { ...c, title: newTitle } : c));
+            } catch (titleErr) {
+              console.error('OpenRouter title generation failed:', titleErr);
+            }
+          }
+
           setIsLoading(false);
           return;
         } catch (orErr) {
@@ -1905,6 +2102,15 @@ Always be encouraging and positive. Keep language simple and clear.`,
 
   const isTimeLimitReached = userData.enableDailyTimeLimit && timeSpentToday >= 2 * 60 * 60; // 7200 seconds / 2 hours
 
+  const handleEnterApp = () => {
+    setShowIntro(false);
+    localStorage.setItem('dyslearn-has-seen-intro', 'true');
+  };
+
+  if (showIntro) {
+    return <IntroPage onEnter={handleEnterApp} />;
+  }
+
   if (isTimeLimitReached) {
     return (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg-primary)] p-6 animate-fade-in-fast">
@@ -1981,7 +2187,7 @@ Always be encouraging and positive. Keep language simple and clear.`,
             onResume={handleResumeSpeech}
             onStop={handleStopSpeech}
         />
-        <ChatInput 
+        <GeminiChatInput 
           onSendMessage={handleSendMessage} 
           onGenerateImage={handleGenerateImage}
           isLoading={isLoading} 

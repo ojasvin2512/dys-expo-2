@@ -1,0 +1,983 @@
+/* Theme System - Pixel Art Gaming Theme */
+
+/* Pixel Theme - Gaming Aesthetic */
+.pixel {
+  /* Background Colors */
+  --bg-primary: #2d1b4e;
+  --bg-secondary: #4a2c6f;
+  --bg-tertiary: #6b4a9e;
+  --bg-hover: rgba(138, 43, 226, 0.2);
+  --bg-active: rgba(138, 43, 226, 0.3);
+  
+  /* Text Colors */
+  --text-primary: #ffffff;
+  --text-secondary: #e0d0ff;
+  --text-tertiary: #c0a0ff;
+  --text-muted: #a080d0;
+  
+  /* Accent Colors */
+  --accent-primary: #00ffff;
+  --accent-secondary: #ff00ff;
+  --accent-tertiary: #ffff00;
+  --accent-success: #00ff88;
+  --accent-warning: #ffaa00;
+  --accent-error: #ff0080;
+  
+  /* Border Colors */
+  --border-primary: #00ffff;
+  --border-secondary: #ff00ff;
+  --border-tertiary: rgba(0, 255, 255, 0.3);
+  
+  /* Shadow Colors */
+  --shadow-glow-cyan: 0 0 20px rgba(0, 255, 255, 0.6);
+  --shadow-glow-magenta: 0 0 20px rgba(255, 0, 255, 0.6);
+  --shadow-glow-yellow: 0 0 20px rgba(255, 255, 0, 0.6);
+  
+  /* Component Specific */
+  --card-bg: rgba(45, 27, 78, 0.8);
+  --card-border: #00ffff;
+  --button-bg: linear-gradient(135deg, #ff0080 0%, #ff8c00 50%, #ffff00 100%);
+  --button-border: #00ffff;
+  --input-bg: rgba(75, 0, 130, 0.5);
+  --input-border: #00ffff;
+  
+  /* Scrollbar */
+  --scrollbar-track: #2d1b4e;
+  --scrollbar-thumb: #00ffff;
+  --scrollbar-thumb-hover: #ff00ff;
+  
+  /* Bold Text Colors */
+  --bold-color-1: #00ffff;
+  --bold-color-2: #ff00ff;
+  --bold-color-3: #ffff00;
+  --bold-color-4: #00ff88;
+  --bold-color-5: #ffaa00;
+  --bold-color-6: #ff0080;
+}
+
+/* Other Themes - Bold Text Colors */
+.light {
+  --bold-color-1: #0066cc;
+  --bold-color-2: #cc0066;
+  --bold-color-3: #cc6600;
+  --bold-color-4: #009966;
+  --bold-color-5: #9900cc;
+  --bold-color-6: #cc3300;
+}
+
+.dark {
+  --bold-color-1: #4da6ff;
+  --bold-color-2: #ff4da6;
+  --bold-color-3: #ffd24d;
+  --bold-color-4: #4dff99;
+  --bold-color-5: #d24dff;
+  --bold-color-6: #ff4d4d;
+}
+
+.sepia {
+  --bold-color-1: #8b4513;
+  --bold-color-2: #a0522d;
+  --bold-color-3: #cd853f;
+  --bold-color-4: #d2691e;
+  --bold-color-5: #8b6914;
+  --bold-color-6: #a0826d;
+}
+
+.ocean {
+  --bold-color-1: #00bcd4;
+  --bold-color-2: #0097a7;
+  --bold-color-3: #26c6da;
+  --bold-color-4: #00acc1;
+  --bold-color-5: #0288d1;
+  --bold-color-6: #039be5;
+}
+
+.forest {
+  --bold-color-1: #4caf50;
+  --bold-color-2: #66bb6a;
+  --bold-color-3: #81c784;
+  --bold-color-4: #388e3c;
+  --bold-color-5: #43a047;
+  --bold-color-6: #2e7d32;
+}
+
+.sunset {
+  --bold-color-1: #ff6b6b;
+  --bold-color-2: #ff8e53;
+  --bold-color-3: #ffd93d;
+  --bold-color-4: #ff9ff3;
+  --bold-color-5: #ff6b9d;
+  --bold-color-6: #ffa07a;
+}
+
+.lavender {
+  --bold-color-1: #9c27b0;
+  --bold-color-2: #ab47bc;
+  --bold-color-3: #ba68c8;
+  --bold-color-4: #ce93d8;
+  --bold-color-5: #8e24aa;
+  --bold-color-6: #7b1fa2;
+}
+
+.midnight {
+  --bold-color-1: #5c6bc0;
+  --bold-color-2: #7e57c2;
+  --bold-color-3: #9575cd;
+  --bold-color-4: #64b5f6;
+  --bold-color-5: #4fc3f7;
+  --bold-color-6: #4dd0e1;
+}
+
+.cream {
+  --bold-color-1: #d4a574;
+  --bold-color-2: #c9a581;
+  --bold-color-3: #b8956a;
+  --bold-color-4: #a67c52;
+  --bold-color-5: #8b6f47;
+  --bold-color-6: #9d7a54;
+}
+
+/* Pixel Art Background Style */
+.bg-pixelart {
+  position: relative;
+  background: linear-gradient(180deg, #2d1b4e 0%, #4a2c6f 50%, #6b4a9e 100%);
+}
+
+.bg-pixelart::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    /* Pixel Stars */
+    radial-gradient(2px 2px at 15% 20%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(2px 2px at 45% 15%, rgba(0, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 75% 25%, rgba(255, 0, 255, 0.7), transparent),
+    radial-gradient(2px 2px at 85% 35%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 25% 45%, rgba(0, 255, 255, 0.6), transparent),
+    radial-gradient(2px 2px at 55% 55%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 90% 60%, rgba(255, 0, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 10% 70%, rgba(255, 255, 0, 0.6), transparent),
+    radial-gradient(2px 2px at 65% 80%, rgba(0, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 35% 90%, rgba(255, 255, 255, 0.8), transparent);
+  animation: twinklePixelStars 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-pixelart::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 30%;
+  background: 
+    /* Pixel Buildings Silhouette */
+    linear-gradient(90deg, transparent 0%, transparent 8%, rgba(138, 43, 226, 0.2) 8%, rgba(138, 43, 226, 0.2) 12%, transparent 12%),
+    linear-gradient(90deg, transparent 15%, transparent 18%, rgba(75, 0, 130, 0.3) 18%, rgba(75, 0, 130, 0.3) 24%, transparent 24%),
+    linear-gradient(90deg, transparent 28%, transparent 30%, rgba(138, 43, 226, 0.2) 30%, rgba(138, 43, 226, 0.2) 36%, transparent 36%),
+    linear-gradient(90deg, transparent 40%, transparent 44%, rgba(75, 0, 130, 0.3) 44%, rgba(75, 0, 130, 0.3) 48%, transparent 48%),
+    linear-gradient(90deg, transparent 52%, transparent 54%, rgba(138, 43, 226, 0.2) 54%, rgba(138, 43, 226, 0.2) 60%, transparent 60%),
+    linear-gradient(90deg, transparent 65%, transparent 68%, rgba(75, 0, 130, 0.3) 68%, rgba(75, 0, 130, 0.3) 72%, transparent 72%),
+    linear-gradient(90deg, transparent 78%, transparent 80%, rgba(138, 43, 226, 0.2) 80%, rgba(138, 43, 226, 0.2) 86%, transparent 86%),
+    linear-gradient(90deg, transparent 90%, transparent 92%, rgba(75, 0, 130, 0.3) 92%, rgba(75, 0, 130, 0.3) 98%, transparent 98%);
+  background-size: 100% 100%;
+  animation: scrollPixelBuildings 30s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes twinklePixelStars {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes scrollPixelBuildings {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Pixel Theme Component Styles */
+.pixel .chat-input-container {
+  background: var(--card-bg);
+  border: 2px solid var(--border-primary);
+  box-shadow: var(--shadow-glow-cyan);
+}
+
+.pixel textarea,
+.pixel input {
+  background: var(--input-bg);
+  border: 2px solid var(--input-border);
+  color: var(--text-primary);
+}
+
+.pixel textarea:focus,
+.pixel input:focus {
+  border-color: var(--accent-secondary);
+  box-shadow: var(--shadow-glow-magenta);
+}
+
+.pixel button {
+  background: var(--button-bg);
+  border: 2px solid var(--button-border);
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-glow-cyan);
+  transition: all 0.3s ease;
+}
+
+.pixel button:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 30px rgba(0, 255, 255, 0.8),
+    0 0 40px rgba(255, 0, 255, 0.5);
+}
+
+/* Bold Text Styling - Alternating Neon Colors */
+.pixel strong,
+.pixel b {
+  font-weight: 900;
+  color: var(--accent-primary);
+  text-shadow: 
+    0 0 8px rgba(0, 255, 255, 0.8),
+    0 0 12px rgba(0, 255, 255, 0.5);
+  padding: 0 2px;
+  position: relative;
+  display: inline-block;
+  animation: boldGlow 3s ease-in-out infinite;
+}
+
+/* Alternating colors for consecutive bold elements */
+.pixel strong:nth-of-type(2n),
+.pixel b:nth-of-type(2n) {
+  color: var(--accent-secondary);
+  text-shadow: 
+    0 0 8px rgba(255, 0, 255, 0.8),
+    0 0 12px rgba(255, 0, 255, 0.5);
+}
+
+.pixel strong:nth-of-type(3n),
+.pixel b:nth-of-type(3n) {
+  color: var(--accent-tertiary);
+  text-shadow: 
+    0 0 8px rgba(255, 255, 0, 0.8),
+    0 0 12px rgba(255, 255, 0, 0.5);
+}
+
+.pixel strong:nth-of-type(4n),
+.pixel b:nth-of-type(4n) {
+  color: var(--accent-success);
+  text-shadow: 
+    0 0 8px rgba(0, 255, 136, 0.8),
+    0 0 12px rgba(0, 255, 136, 0.5);
+}
+
+.pixel strong:nth-of-type(5n),
+.pixel b:nth-of-type(5n) {
+  color: var(--accent-warning);
+  text-shadow: 
+    0 0 8px rgba(255, 170, 0, 0.8),
+    0 0 12px rgba(255, 170, 0, 0.5);
+}
+
+.pixel strong:nth-of-type(6n),
+.pixel b:nth-of-type(6n) {
+  color: var(--accent-error);
+  text-shadow: 
+    0 0 8px rgba(255, 0, 128, 0.8),
+    0 0 12px rgba(255, 0, 128, 0.5);
+}
+
+@keyframes boldGlow {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+}
+
+/* Bold text in message bubbles */
+.pixel .message-bubble strong,
+.pixel .message-bubble b {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid currentColor;
+  box-shadow: 0 0 10px currentColor;
+}
+
+/* Bold text in headings gets extra emphasis */
+.pixel h1 strong,
+.pixel h1 b,
+.pixel h2 strong,
+.pixel h2 b,
+.pixel h3 strong,
+.pixel h3 b {
+  font-size: 1.1em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.pixel .message-bubble {
+  background: var(--card-bg);
+  border: 2px solid var(--border-tertiary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.pixel .message-bubble.user {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow-cyan);
+}
+
+.pixel .message-bubble.assistant {
+  border-color: var(--accent-secondary);
+  box-shadow: var(--shadow-glow-magenta);
+}
+
+.pixel .sidebar {
+  background: var(--bg-primary);
+  border-right: 2px solid var(--border-primary);
+  box-shadow: 2px 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.pixel .header {
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--border-primary);
+  box-shadow: 0 2px 20px rgba(0, 255, 255, 0.3);
+}
+
+.pixel .card,
+.pixel .panel {
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  box-shadow: var(--shadow-glow-cyan);
+  backdrop-filter: blur(10px);
+}
+
+/* Pixel Theme Scrollbar */
+.pixel ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.pixel ::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border: 1px solid var(--border-tertiary);
+}
+
+.pixel ::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+}
+
+.pixel ::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+}
+
+/* Pixel Theme Text Glow Effects */
+.pixel h1,
+.pixel h2,
+.pixel h3 {
+  color: var(--accent-primary);
+  text-shadow: 
+    0 0 10px rgba(0, 255, 255, 0.8),
+    0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.pixel .accent-text {
+  color: var(--accent-secondary);
+  text-shadow: 
+    0 0 10px rgba(255, 0, 255, 0.8),
+    0 0 20px rgba(255, 0, 255, 0.5);
+}
+
+/* Pixel Theme Animations */
+.pixel .animate-glow {
+  animation: pixelGlowPulse 2s ease-in-out infinite;
+}
+
+@keyframes pixelGlowPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(0, 255, 255, 0.6),
+      0 0 30px rgba(255, 0, 255, 0.4);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(0, 255, 255, 0.9),
+      0 0 50px rgba(255, 0, 255, 0.6);
+  }
+}
+
+/* Pixel Theme Badges and Tags */
+.pixel .badge,
+.pixel .tag {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  border: 2px solid var(--accent-tertiary);
+  color: white;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 12px;
+  box-shadow: 
+    0 0 15px rgba(0, 255, 255, 0.5),
+    0 0 20px rgba(255, 0, 255, 0.3);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Pixel Theme Loading States */
+.pixel .loading-spinner {
+  border: 4px solid var(--border-tertiary);
+  border-top-color: var(--accent-primary);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+}
+
+/* Pixel Theme Success/Error States */
+.pixel .success {
+  background: rgba(0, 255, 136, 0.2);
+  border-color: var(--accent-success);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+.pixel .error {
+  background: rgba(255, 0, 128, 0.2);
+  border-color: var(--accent-error);
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+}
+
+.pixel .warning {
+  background: rgba(255, 170, 0, 0.2);
+  border-color: var(--accent-warning);
+  box-shadow: 0 0 20px rgba(255, 170, 0, 0.5);
+}
+
+/* Pixel Theme Modal/Dialog */
+.pixel .modal,
+.pixel .dialog {
+  background: var(--bg-primary);
+  border: 3px solid var(--border-primary);
+  box-shadow: 
+    0 0 40px rgba(0, 255, 255, 0.6),
+    0 20px 60px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(20px);
+}
+
+/* Pixel Theme Tooltips */
+.pixel .tooltip {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-tertiary);
+  color: var(--text-primary);
+  box-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
+  font-family: 'Courier New', monospace;
+}
+
+/* Pixel Theme Links */
+.pixel a {
+  color: var(--accent-primary);
+  text-decoration: none;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+.pixel a:hover {
+  color: var(--accent-secondary);
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.8);
+}
+
+/* Pixel Theme Selection */
+.pixel ::selection {
+  background: rgba(0, 255, 255, 0.3);
+  color: white;
+}
+
+/* Pixel Theme Code Blocks */
+.pixel code,
+.pixel pre {
+  background: rgba(75, 0, 130, 0.5);
+  border: 1px solid var(--border-tertiary);
+  color: var(--accent-tertiary);
+  font-family: 'Courier New', monospace;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Pixel Theme Tables */
+.pixel table {
+  border: 2px solid var(--border-primary);
+  background: var(--card-bg);
+}
+
+.pixel th {
+  background: var(--bg-secondary);
+  border-bottom: 2px solid var(--accent-primary);
+  color: var(--accent-primary);
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+}
+
+.pixel td {
+  border: 1px solid var(--border-tertiary);
+}
+
+.pixel tr:hover {
+  background: var(--bg-hover);
+}
+
+/* Pixel Theme Progress Bars */
+.pixel .progress-bar {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-primary);
+  overflow: hidden;
+}
+
+.pixel .progress-fill {
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+  animation: progressShine 2s linear infinite;
+}
+
+@keyframes progressShine {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+/* Pixel Theme Checkboxes and Radio Buttons */
+.pixel input[type="checkbox"],
+.pixel input[type="radio"] {
+  accent-color: var(--accent-primary);
+  filter: drop-shadow(0 0 5px rgba(0, 255, 255, 0.5));
+}
+
+/* Pixel Theme Dividers */
+.pixel hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-primary), var(--accent-secondary), transparent);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* ============================================ */
+/* UNIVERSAL BOLD TEXT STYLING FOR ALL THEMES */
+/* ============================================ */
+
+/* Base bold text styling - applies to all themes */
+strong,
+b {
+  font-weight: 900;
+  position: relative;
+  display: inline;
+  padding: 0 2px;
+}
+
+/* Theme-specific bold text colors with glow effects */
+
+/* Pixel Theme Bold Text */
+.pixel strong:nth-of-type(1),
+.pixel b:nth-of-type(1) {
+  color: var(--bold-color-1);
+  text-shadow: 0 0 8px currentColor;
+}
+
+.pixel strong:nth-of-type(2),
+.pixel b:nth-of-type(2) {
+  color: var(--bold-color-2);
+  text-shadow: 0 0 8px currentColor;
+}
+
+.pixel strong:nth-of-type(3),
+.pixel b:nth-of-type(3) {
+  color: var(--bold-color-3);
+  text-shadow: 0 0 8px currentColor;
+}
+
+.pixel strong:nth-of-type(4),
+.pixel b:nth-of-type(4) {
+  color: var(--bold-color-4);
+  text-shadow: 0 0 8px currentColor;
+}
+
+.pixel strong:nth-of-type(5),
+.pixel b:nth-of-type(5) {
+  color: var(--bold-color-5);
+  text-shadow: 0 0 8px currentColor;
+}
+
+.pixel strong:nth-of-type(6),
+.pixel b:nth-of-type(6) {
+  color: var(--bold-color-6);
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* Repeat pattern for more bold elements */
+.pixel strong:nth-of-type(n+7),
+.pixel b:nth-of-type(n+7) {
+  color: var(--bold-color-1);
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* Other Themes Bold Text - Light Theme */
+.light strong,
+.light b {
+  font-weight: 900;
+}
+
+.light strong:nth-of-type(6n+1),
+.light b:nth-of-type(6n+1) {
+  color: var(--bold-color-1);
+}
+
+.light strong:nth-of-type(6n+2),
+.light b:nth-of-type(6n+2) {
+  color: var(--bold-color-2);
+}
+
+.light strong:nth-of-type(6n+3),
+.light b:nth-of-type(6n+3) {
+  color: var(--bold-color-3);
+}
+
+.light strong:nth-of-type(6n+4),
+.light b:nth-of-type(6n+4) {
+  color: var(--bold-color-4);
+}
+
+.light strong:nth-of-type(6n+5),
+.light b:nth-of-type(6n+5) {
+  color: var(--bold-color-5);
+}
+
+.light strong:nth-of-type(6n),
+.light b:nth-of-type(6n) {
+  color: var(--bold-color-6);
+}
+
+/* Dark Theme Bold Text */
+.dark strong:nth-of-type(6n+1),
+.dark b:nth-of-type(6n+1) {
+  color: var(--bold-color-1);
+  text-shadow: 0 0 5px currentColor;
+}
+
+.dark strong:nth-of-type(6n+2),
+.dark b:nth-of-type(6n+2) {
+  color: var(--bold-color-2);
+  text-shadow: 0 0 5px currentColor;
+}
+
+.dark strong:nth-of-type(6n+3),
+.dark b:nth-of-type(6n+3) {
+  color: var(--bold-color-3);
+  text-shadow: 0 0 5px currentColor;
+}
+
+.dark strong:nth-of-type(6n+4),
+.dark b:nth-of-type(6n+4) {
+  color: var(--bold-color-4);
+  text-shadow: 0 0 5px currentColor;
+}
+
+.dark strong:nth-of-type(6n+5),
+.dark b:nth-of-type(6n+5) {
+  color: var(--bold-color-5);
+  text-shadow: 0 0 5px currentColor;
+}
+
+.dark strong:nth-of-type(6n),
+.dark b:nth-of-type(6n) {
+  color: var(--bold-color-6);
+  text-shadow: 0 0 5px currentColor;
+}
+
+/* Sepia Theme Bold Text */
+.sepia strong:nth-of-type(6n+1),
+.sepia b:nth-of-type(6n+1) {
+  color: var(--bold-color-1);
+}
+
+.sepia strong:nth-of-type(6n+2),
+.sepia b:nth-of-type(6n+2) {
+  color: var(--bold-color-2);
+}
+
+.sepia strong:nth-of-type(6n+3),
+.sepia b:nth-of-type(6n+3) {
+  color: var(--bold-color-3);
+}
+
+.sepia strong:nth-of-type(6n+4),
+.sepia b:nth-of-type(6n+4) {
+  color: var(--bold-color-4);
+}
+
+.sepia strong:nth-of-type(6n+5),
+.sepia b:nth-of-type(6n+5) {
+  color: var(--bold-color-5);
+}
+
+.sepia strong:nth-of-type(6n),
+.sepia b:nth-of-type(6n) {
+  color: var(--bold-color-6);
+}
+
+/* Ocean Theme Bold Text */
+.ocean strong:nth-of-type(6n+1),
+.ocean b:nth-of-type(6n+1) {
+  color: var(--bold-color-1);
+  text-shadow: 0 0 4px rgba(0, 188, 212, 0.3);
+}
+
+.ocean strong:nth-of-type(6n+2),
+.ocean b:nth-of-type(6n+2) {
+  color: var(--bold-color-2);
+  text-shadow: 0 0 4px rgba(0, 151, 167, 0.3);
+}
+
+.ocean strong:nth-of-type(6n+3),
+.ocean b:nth-of-type(6n+3) {
+  color: var(--bold-color-3);
+  text-shadow: 0 0 4px rgba(38, 198, 218, 0.3);
+}
+
+.ocean strong:nth-of-type(6n+4),
+.ocean b:nth-of-type(6n+4) {
+  color: var(--bold-color-4);
+  text-shadow: 0 0 4px rgba(0, 172, 193, 0.3);
+}
+
+.ocean strong:nth-of-type(6n+5),
+.ocean b:nth-of-type(6n+5) {
+  color: var(--bold-color-5);
+  text-shadow: 0 0 4px rgba(2, 136, 209, 0.3);
+}
+
+.ocean strong:nth-of-type(6n),
+.ocean b:nth-of-type(6n) {
+  color: var(--bold-color-6);
+  text-shadow: 0 0 4px rgba(3, 155, 229, 0.3);
+}
+
+/* Forest Theme Bold Text */
+.forest strong:nth-of-type(6n+1),
+.forest b:nth-of-type(6n+1) {
+  color: var(--bold-color-1);
+  text-shadow: 0 0 4px rgba(76, 175, 80, 0.3);
+}
+
+.forest strong:nth-of-type(6n+2),
+.forest b:nth-of-type(6n+2) {
+  color: var(--bold-color-2);
+  text-shadow: 0 0 4px rgba(102, 187, 106, 0.3);
+}
+
+.forest strong:nth-of-type(6n+3),
+.forest b:nth-of-type(6n+3) {
+  color: var(--bold-color-3);
+  text-shadow: 0 0 4px rgba(129, 199, 132, 0.3);
+}
+
+.forest strong:nth-of-type(6n+4),
+.forest b:nth-of-type(6n+4) {
+  color: var(--bold-color-4);
+  text-shadow: 0 0 4px rgba(56, 142, 60, 0.3);
+}
+
+.forest strong:nth-of-type(6n+5),
+.forest b:nth-of-type(6n+5) {
+  color: var(--bold-color-5);
+  text-shadow: 0 0 4px rgba(67, 160, 71, 0.3);
+}
+
+.forest strong:nth-of-type(6n),
+.forest b:nth-of-type(6n) {
+  color: var(--bold-color-6);
+  text-shadow: 0 0 4px rgba(46, 125, 50, 0.3);
+}
+
+/* Sunset Theme Bold Text */
+.sunset strong:nth-of-type(6n+1),
+.sunset b:nth-of-type(6n+1) {
+  color: var(--bold-color-1);
+  text-shadow: 0 0 6px rgba(255, 107, 107, 0.4);
+}
+
+.sunset strong:nth-of-type(6n+2),
+.sunset b:nth-of-type(6n+2) {
+  color: var(--bold-color-2);
+  text-shadow: 0 0 6px rgba(255, 142, 83, 0.4);
+}
+
+.sunset strong:nth-of-type(6n+3),
+.sunset b:nth-of-type(6n+3) {
+  color: var(--bold-color-3);
+  text-shadow: 0 0 6px rgba(255, 217, 61, 0.4);
+}
+
+.sunset strong:nth-of-type(6n+4),
+.sunset b:nth-of-type(6n+4) {
+  color: var(--bold-color-4);
+  text-shadow: 0 0 6px rgba(255, 159, 243, 0.4);
+}
+
+.sunset strong:nth-of-type(6n+5),
+.sunset b:nth-of-type(6n+5) {
+  color: var(--bold-color-5);
+  text-shadow: 0 0 6px rgba(255, 107, 157, 0.4);
+}
+
+.sunset strong:nth-of-type(6n),
+.sunset b:nth-of-type(6n) {
+  color: var(--bold-color-6);
+  text-shadow: 0 0 6px rgba(255, 160, 122, 0.4);
+}
+
+/* Lavender Theme Bold Text */
+.lavender strong:nth-of-type(6n+1),
+.lavender b:nth-of-type(6n+1) {
+  color: var(--bold-color-1);
+  text-shadow: 0 0 5px rgba(156, 39, 176, 0.3);
+}
+
+.lavender strong:nth-of-type(6n+2),
+.lavender b:nth-of-type(6n+2) {
+  color: var(--bold-color-2);
+  text-shadow: 0 0 5px rgba(171, 71, 188, 0.3);
+}
+
+.lavender strong:nth-of-type(6n+3),
+.lavender b:nth-of-type(6n+3) {
+  color: var(--bold-color-3);
+  text-shadow: 0 0 5px rgba(186, 104, 200, 0.3);
+}
+
+.lavender strong:nth-of-type(6n+4),
+.lavender b:nth-of-type(6n+4) {
+  color: var(--bold-color-4);
+  text-shadow: 0 0 5px rgba(206, 147, 216, 0.3);
+}
+
+.lavender strong:nth-of-type(6n+5),
+.lavender b:nth-of-type(6n+5) {
+  color: var(--bold-color-5);
+  text-shadow: 0 0 5px rgba(142, 36, 170, 0.3);
+}
+
+.lavender strong:nth-of-type(6n),
+.lavender b:nth-of-type(6n) {
+  color: var(--bold-color-6);
+  text-shadow: 0 0 5px rgba(123, 31, 162, 0.3);
+}
+
+/* Midnight Theme Bold Text */
+.midnight strong:nth-of-type(6n+1),
+.midnight b:nth-of-type(6n+1) {
+  color: var(--bold-color-1);
+  text-shadow: 0 0 6px rgba(92, 107, 192, 0.4);
+}
+
+.midnight strong:nth-of-type(6n+2),
+.midnight b:nth-of-type(6n+2) {
+  color: var(--bold-color-2);
+  text-shadow: 0 0 6px rgba(126, 87, 194, 0.4);
+}
+
+.midnight strong:nth-of-type(6n+3),
+.midnight b:nth-of-type(6n+3) {
+  color: var(--bold-color-3);
+  text-shadow: 0 0 6px rgba(149, 117, 205, 0.4);
+}
+
+.midnight strong:nth-of-type(6n+4),
+.midnight b:nth-of-type(6n+4) {
+  color: var(--bold-color-4);
+  text-shadow: 0 0 6px rgba(100, 181, 246, 0.4);
+}
+
+.midnight strong:nth-of-type(6n+5),
+.midnight b:nth-of-type(6n+5) {
+  color: var(--bold-color-5);
+  text-shadow: 0 0 6px rgba(79, 195, 247, 0.4);
+}
+
+.midnight strong:nth-of-type(6n),
+.midnight b:nth-of-type(6n) {
+  color: var(--bold-color-6);
+  text-shadow: 0 0 6px rgba(77, 208, 225, 0.4);
+}
+
+/* Cream Theme Bold Text */
+.cream strong:nth-of-type(6n+1),
+.cream b:nth-of-type(6n+1) {
+  color: var(--bold-color-1);
+}
+
+.cream strong:nth-of-type(6n+2),
+.cream b:nth-of-type(6n+2) {
+  color: var(--bold-color-2);
+}
+
+.cream strong:nth-of-type(6n+3),
+.cream b:nth-of-type(6n+3) {
+  color: var(--bold-color-3);
+}
+
+.cream strong:nth-of-type(6n+4),
+.cream b:nth-of-type(6n+4) {
+  color: var(--bold-color-4);
+}
+
+.cream strong:nth-of-type(6n+5),
+.cream b:nth-of-type(6n+5) {
+  color: var(--bold-color-5);
+}
+
+.cream strong:nth-of-type(6n),
+.cream b:nth-of-type(6n) {
+  color: var(--bold-color-6);
+}
+
+/* Enhanced styling for bold text in message bubbles */
+.message-bubble strong,
+.message-bubble b,
+.prose strong,
+.prose b {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin: 0 1px;
+}
+
+.pixel .message-bubble strong,
+.pixel .message-bubble b,
+.pixel .prose strong,
+.pixel .prose b {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* Bold text in lists */
+li strong:first-child,
+li b:first-child {
+  display: inline-block;
+  margin-right: 4px;
+}
+

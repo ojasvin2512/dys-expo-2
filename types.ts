@@ -30,9 +30,9 @@ export interface ChatMetadata {
   challengeId?: string;
 }
 
-export type Theme = 'light' | 'dark' | 'sepia' | 'ocean' | 'forest' | 'sunset' | 'lavender' | 'midnight' | 'cream';
+export type Theme = 'light' | 'dark' | 'sepia' | 'ocean' | 'forest' | 'sunset' | 'lavender' | 'midnight' | 'cream' | 'pixel';
 
-export type BackgroundStyle = 'none' | 'grid' | 'gradient' | 'cosmic' | 'playful' | 'dots';
+export type BackgroundStyle = 'none' | 'grid' | 'gradient' | 'cosmic' | 'playful' | 'dots' | 'pixelart';
 
 export type Language = 'en' | 'es' | 'fr' | 'de' | 'it' | 'hi' | 'bn' | 'ta';
 
@@ -55,9 +55,9 @@ export interface DyslexiaSettings {
 // Represents a file attached by the user.
 export interface FileAttachment {
   name: string;
-  type: 'image' | 'text';
-  content: string; // Base64 for images, raw text for text/pdf
-  mimeType?: string; // e.g., 'image/jpeg', 'image/png'
+  type: 'image' | 'text' | 'audio';
+  content: string; // Base64 for images/audio, raw text for text/pdf
+  mimeType?: string; // e.g., 'image/jpeg', 'image/png', 'audio/webm'
 }
 
 // Represents a single challenge

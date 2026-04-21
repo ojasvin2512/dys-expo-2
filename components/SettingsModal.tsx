@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Theme, CustomInstructions, Language, BackgroundStyle, DyslexiaSettings, ImageProvider } from '../types';
 import { LANGUAGES, GoogleIcon, AppleIcon, FacebookIcon, MicrosoftIcon, IMAGE_PROVIDERS, GEMINI_IMAGE_MODELS } from '../constants';
+import { getUsageStats, getUsagePercentage, getRemainingCalls, isInWarningZone } from '../services/apiUsageTracker';
 
 // The parent component will need to provide handlers for these props.
 interface SettingsModalProps {
@@ -87,6 +88,20 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [isAuthLoading, setIsAuthLoading] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
+  // API Usage State
+  const [apiUsage, setApiUsage] = useState(getUsageStats());
+  const [usagePercent, setUsagePercent] = useState(getUsagePercentage());
+  const [remainingCalls, setRemainingCalls] = useState(getRemainingCalls());
+
+  // Update API usage stats when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setApiUsage(getUsageStats());
+      setUsagePercent(getUsagePercentage());
+      setRemainingCalls(getRemainingCalls());
+    }
+  }, [isOpen]);
 
   const handleAuthSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,6 +186,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     { name: 'lavender', label: 'Lavender' },
     { name: 'midnight', label: 'Midnight' },
     { name: 'cream', label: 'Cream' },
+    { name: 'pixel', label: 'Pixel' },
   ];
   
   const backgroundStyles: { name: BackgroundStyle; label: string }[] = [
@@ -180,6 +196,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     { name: 'gradient', label: 'Gradient' },
     { name: 'cosmic', label: 'Cosmic' },
     { name: 'playful', label: 'Playful' },
+    { name: 'pixelart', label: 'Pixel Art' },
   ];
 
   return (
@@ -316,6 +333,87 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                     </div>
                 </form>
             )}
+          </div>
+
+          {/* API Usage Monitor */}
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 p-4 rounded-lg border border-purple-100 dark:border-purple-800">
+            <h3 className="text-md font-bold text-purple-800 dark:text-purple-200 mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                API Usage Monitor
+            </h3>
+            
+            <div className="space-y-3">
+              {/* Usage Bar */}
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Daily Usage</span>
+                  <span className={`text-sm font-bold ${isInWarningZone() ? 'text-orange-600 dark:text-orange-400' : 'text-teal-600 dark:text-teal-400'}`}>
+                    {usagePercent.toFixed(1)}%
+                  </span>
+                </div>
+                
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                  <div 
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      usagePercent >= 90 ? 'bg-red-500' :
+                      usagePercent >= 80 ? 'bg-orange-500' :
+                      usagePercent >= 60 ? 'bg-yellow-500' :
+                      'bg-teal-500'
+                    }`}
+                    style={{ width: `${Math.min(100, usagePercent)}%` }}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  <span>{apiUsage.geminiCalls + apiUsage.openRouterCalls} calls made</span>
+                  <span>~{remainingCalls} remaining</span>
+                </div>
+              </div>
+              
+              {/* Warning Message */}
+              {isInWarningZone() && (
+                <div className="bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg border border-orange-200 dark:border-orange-800 animate-fade-in-fast">
+                  <div className="flex items-start gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div>
+                      <p className="text-sm font-bold text-orange-800 dark:text-orange-200">Approaching Daily Limit</p>
+                      <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">
+                        You've used {usagePercent.toFixed(0)}% of your estimated daily API quota. Consider taking a break or the app may switch to fallback providers.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Breakdown */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                    <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">Gemini</span>
+                  </div>
+                  <p className="text-lg font-bold text-gray-800 dark:text-gray-200">{apiUsage.geminiCalls}</p>
+                </div>
+                
+                <div className="bg-white dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                    <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">OpenRouter</span>
+                  </div>
+                  <p className="text-lg font-bold text-gray-800 dark:text-gray-200">{apiUsage.openRouterCalls}</p>
+                </div>
+              </div>
+              
+              {/* Info */}
+              <div className="text-xs text-gray-500 dark:text-gray-400 italic">
+                <p>Usage resets daily at midnight. Estimates are based on typical free-tier limits.</p>
+              </div>
+            </div>
           </div>
 
           {/* Accessibility - New Section */}
