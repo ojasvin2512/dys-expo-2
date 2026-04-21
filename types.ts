@@ -30,9 +30,9 @@ export interface ChatMetadata {
   challengeId?: string;
 }
 
-export type Theme = 'light' | 'dark' | 'sepia' | 'ocean' | 'forest' | 'sunset' | 'lavender' | 'midnight' | 'cream' | 'pixel';
+export type Theme = 'light' | 'dark' | 'sepia' | 'ocean' | 'forest' | 'sunset' | 'lavender' | 'midnight' | 'cream' | 'pixel' | 'halloween' | 'tokyo' | 'pokemon';
 
-export type BackgroundStyle = 'none' | 'grid' | 'gradient' | 'cosmic' | 'playful' | 'dots' | 'pixelart';
+export type BackgroundStyle = 'none' | 'grid' | 'gradient' | 'cosmic' | 'playful' | 'dots' | 'pixelart' | 'spooky' | 'neon' | 'pokeball';
 
 export type Language = 'en' | 'es' | 'fr' | 'de' | 'it' | 'hi' | 'bn' | 'ta';
 

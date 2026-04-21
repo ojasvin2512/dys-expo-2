@@ -187,6 +187,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     { name: 'midnight', label: 'Midnight' },
     { name: 'cream', label: 'Cream' },
     { name: 'pixel', label: 'Pixel' },
+    { name: 'halloween', label: '🎃 Halloween' },
+    { name: 'tokyo', label: '🗼 Tokyo' },
+    { name: 'pokemon', label: '⚡ Pokemon' },
   ];
   
   const backgroundStyles: { name: BackgroundStyle; label: string }[] = [
@@ -197,6 +200,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     { name: 'cosmic', label: 'Cosmic' },
     { name: 'playful', label: 'Playful' },
     { name: 'pixelart', label: 'Pixel Art' },
+    { name: 'spooky', label: '👻 Spooky' },
+    { name: 'neon', label: '🌃 Neon City' },
+    { name: 'pokeball', label: '⚪ Pokeball' },
   ];
 
   return (

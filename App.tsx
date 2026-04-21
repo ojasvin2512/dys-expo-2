@@ -888,7 +888,7 @@ function AppInner() {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('light', 'dark', 'sepia', 'ocean', 'forest', 'sunset', 'lavender', 'midnight', 'cream', 'pixel');
+    root.classList.remove('light', 'dark', 'sepia', 'ocean', 'forest', 'sunset', 'lavender', 'midnight', 'cream', 'pixel', 'halloween', 'tokyo', 'pokemon');
     root.classList.add(theme);
     
     if (dyslexiaSettings.enabled) {
